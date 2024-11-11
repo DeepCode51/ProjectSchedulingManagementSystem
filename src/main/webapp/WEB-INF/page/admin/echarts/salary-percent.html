@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8" />
+    <title>部门工资占比饼状图</title>
+    <link rel="stylesheet" href="/ssm_esms/static/css/font.css">
+    <link rel="stylesheet" href="/ssm_esms/static/css/xadmin.css">
+    <script type="text/javascript" src="/ssm_esms/static/js/echarts.js"></script>
+    <script type="text/javascript" src="/ssm_esms/static/js/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="/ssm_esms/static/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="/ssm_esms/static/js/xadmin.js"></script>
+</head>
+<body >
+<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a >首页</a>
+        <a >图表显示</a>
+        <a>
+          <cite>部门工资占比饼状图</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+<div>
+    <br/>
+    <label>月度查询：</label>
+    <!--<input class="dateinput dateicon" id="ymd01" type="text" placeholder="点击此处" readonly>-->
+    <div class="layui-inline">
+        <!--<input class="dateinput dateicon" id="ymd01" type="text" placeholder="点击此处" readonly>-->
+        <input id="ymd01" lay-verify="date" autocomplete="off" class="layui-input" type="text" placeholder="点击此处"
+               readonly>
+    </div>
+    <button id="comfire" class="layui-btn" type="button">查看</button>&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <label>年度查询：</label>
+    <!--<input class="dateinput dateicon" id="year" type="text" placeholder="点击此处" readonly>-->
+    <div class="layui-inline">
+        <!--<input class="dateinput dateicon" id="ymd01" type="text" placeholder="点击此处" readonly>-->
+        <input id="year" lay-verify="date" autocomplete="off" class="layui-input" type="text" placeholder="点击此处"
+               readonly>
+    </div>&nbsp;&nbsp;
+    <button id="yearButton" class="layui-btn" type="button">查看</button><br/></br>
+</div>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div id="main" style="width: 800px;height:400px;"></div>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var year = new Date().getFullYear();
+    var month = new Date().getMonth();
+    var myChart = echarts.init(document.getElementById('main'));
+    var option = {
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b}: {c} ({d}%)"
+        },
+        legend: {
+            orient: 'vertical',
+            x: 'left',
+            data:[]
+        },
+        series: [
+            {
+                name:'工资占比',
+                type:'pie',
+                radius: ['50%', '70%'],
+                avoidLabelOverlap: false,
+                label: {
+                    normal: {
+                        show: false,
+                        position: 'center'
+                    },
+                    emphasis: {
+                        show: true,
+                        textStyle: {
+                            fontSize: '30',
+                            fontWeight: 'bold'
+                        }
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        show: false
+                    }
+                },
+                data:[
+
+                ]
+            }
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+    //ajax获取数据函数
+        function read(date,state){
+            //alert(date);
+            myChart.showLoading();    //数据加载完之前先显示一段简单的loading动画
+            var departments = [];    //部门数组
+            var departmentSalary = [];            //部门工资总数
+
+            $.ajax({
+                type: 'get',
+                url: '/ssm_esms/showSalaryPercent.do?date='+date+'&state='+state,//请求数据的地址
+                dataType: "json",        //返回数据形式为json
+                success: function (result) {
+                    //请求成功时执行该函数内容，result即为服务器返回的json对象
+                    $.each(result.list, function (index, item) {
+                        departments.push(item.department);    //挨个取出类别并填入类别数组
+                        departmentSalary.push({
+                            name: item.department,
+                            value: item.salary
+                        });
+                    });
+                    myChart.hideLoading();    //隐藏加载动画
+                    myChart.setOption({        //加载数据图表
+                            title: {
+                            text: '部门工资占比饼状图('+date+")"
+                        },
+                        legend: {
+                            orient: 'vertical',
+                            x: 'right',
+                            data:departments
+                        },
+                        series: [
+                            {
+                                data:departmentSalary
+                            }
+                        ]
+                    });
+                },
+                error: function (errorMsg) {
+                    //请求失败时执行该函数
+                    alert("图表请求数据失败!");
+                    myChart.hideLoading();
+                }
+            });
+        }
+        //页面加载时，调用read()发出ajax请求
+        $(function () {
+            //参数为当前年上一月
+            read(year+'-'+"0"+month,0);
+        })
+
+    //点击显示（YYYY年MM月DD日 hh:mm:ss）格式
+    // jeDate("#ymd01",{
+    //     isinitVal:true,
+    //     festival: true,
+    //     format: 'YYYY-MM',
+    //     initDate:[{YYYY:year,MM:month},false],
+    //     minDate:"2017-09-19 00:00:00",      //最小时间
+    //     maxDate:year+"-"+month,              //最大日期（当前年，上一月）
+    // });
+    // //年度时间
+    // jeDate("#year",{
+    //     isinitVal:true,
+    //     festival: true,
+    //     format: 'YYYY',
+    //     initDate:[{YYYY:year-1},false],
+    //     minDate:"2015",      //最小时间
+    //     maxDate:year-1+"-",              //最大日期（上一年）
+    // });
+
+    layui.use(['laydate'], function () {
+        var laydate = layui.laydate;
+
+        //年月范围
+        laydate.render({
+            elem: '#ymd01'
+            , type: 'month'
+        });
+
+        //年范围
+        laydate.render({
+            elem: '#year'
+            , type: 'year'
+        });
+    });
+    //点击查看按钮
+    $("#comfire").click(function () {
+        var time = $("#ymd01").val();
+        //alert(time);
+        read(time,0);
+    })
+    $("#yearButton").click(function () {
+        var time = $("#year").val();
+        //alert(time);
+        read(time,1);
+    })
+
+
+
+
+
+
+</script>
+</body>
+</html>

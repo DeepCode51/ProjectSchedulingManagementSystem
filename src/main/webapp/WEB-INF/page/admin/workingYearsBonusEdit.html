@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>ESMS</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/ssm_esms/static/css/font.css">
+    <link rel="stylesheet" href="/ssm_esms/static/css/xadmin.css">
+    <script type="text/javascript" src="/ssm_esms/static/js/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="/ssm_esms/static/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="/ssm_esms/static/js/xadmin.js"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      <!--<script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>-->
+    <!--<script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
+</head>
+
+<body>
+<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a>首页</a>
+        <a>工龄管理</a>
+        <a>
+          <cite>工龄编辑</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+       href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+
+<div class="x-body layui-anim layui-anim-up">
+    <form class="layui-form" action="">
+        <!--id的隐藏域-->
+        <input type="hidden" value="" id="rbIdInput">
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class="x-red"></span>工龄</label>
+            <div class="layui-input-block">
+                <input name="rankNameInput" id="rankNameInput" lay-verify="yearVerify" autocomplete="off"
+                       class="layui-input" type="text" value="">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class="x-red"></span>补贴金额</label>
+            <div class="layui-input-block">
+                <input name="d_remark" id="rbBonusInput" lay-verify="bonusVerify" autocomplete="off" class="layui-input"
+                       type="text" value="">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="demo1">确定</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+
+    //加载参数
+    window.onload = function () {
+        //加载id
+        $("#rbIdInput").val(decodeURI(getQueryVariable("wybId")));
+        //加载名称
+        $("#rankNameInput").val(decodeURI(getQueryVariable("wybYear")));
+        //加载金额
+        $("#rbBonusInput").val(decodeURI(getQueryVariable("wybBonus")));
+    }
+
+    //获取url参数
+    function getQueryVariable(variable) {
+        var query = window.location.search.substring(1);
+        var index = query.indexOf("?");
+        query = query.substr(index + 1, query.length);
+        // console.log(query);
+        var vars = query.split("&");
+        // console.log(vars);
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            // console.log(pair[0]);
+            if (pair[0] == variable) {
+                return pair[1];
+            }
+        }
+        return false;
+    }
+
+    layui.use(['form', 'layer'], function () {
+        $ = layui.jquery;
+        var form = layui.form
+            , layer = layui.layer;
+        //自定义验证规则
+        form.verify({
+            yearVerify: function (value) {
+                var number = new RegExp("^[0-9]*$");
+
+                value = value.replace(" ", "");
+                if (value.length == 0) {
+                    return '工龄名称不能为空';
+                }
+                if (value.length > 200) {
+                    return '工龄名称过长';
+                }
+                if (!number.test(value)) {
+                    return '工龄只能是整数';
+                }
+            },
+            bonusVerify: function (value) {
+                var number = new RegExp("^[0-9]*$");
+                value = value.replace(" ", "");
+                if (value.length == 0) {
+                    return '不能为空';
+                }
+                if (value.length > 10) {
+                    return '过长';
+                }
+
+                if (!number.test(value)) {
+                    return '补贴金额只能是整数';
+                }
+            }
+        });
+        // 监听提交
+        form.on('submit(demo1)', function (data) {
+            // alert($("#rbIdInput").val());
+            // alert(JSON.stringify(data.field));
+            $.ajax({
+                type: 'post',
+                url: 'updateRecord.do',
+                data: {
+                    "id": $("#rbIdInput").val(),
+                    "year": $("#rankNameInput").val(),
+                    "bonus": $("#rbBonusInput").val()
+                },
+                /*dataType:'json',*/
+                success: function (data) {
+                    if(data=="exist"){
+                        layer.msg('已存在该工龄!',{icon: 5,anim: 6});
+                    }
+                    if (data == "ok") {
+                        layer.alert("修改成功", {icon: 6}, function () {
+                            window.parent.location.reload();
+                            // 获得frame索引
+                            var index = parent.layer.getFrameIndex(window.name);
+                            //关闭当前frame
+                            parent.layer.close(index);
+
+                        });
+                    }
+
+
+                },
+                error: function (err) {
+                    if (err == "no") {
+                        alert("修改失败！");
+                    }
+                }
+
+
+            });
+            return false;
+        });
+    });
+</script>
+
+</body>
+
+</html>

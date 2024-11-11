@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ESMS | 项目调度管理系统</title>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/ssm_esms/static/css/font.css">
+    <link rel="stylesheet" href="/ssm_esms/static/css/xadmin.css">
+    <script type="text/javascript" src="/ssm_esms/static/js/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="/ssm_esms/static/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="/ssm_esms/static/js/xadmin.js"></script>
+
+</head>
+<body>
+<!-- 顶部开始 -->
+<div class="container">
+    <div class="logo"><a>ESMS | 管理员端</a></div>
+    <div class="left_open">
+        <i title="展开左侧栏" class="iconfont">&#xe699;</i>
+    </div>
+    <ul class="layui-nav right" lay-filter="">
+        <li class="layui-nav-item">
+            <a href="javascript:;"><span id="account">管理员</span></a>
+            <dl class="layui-nav-child"> <!-- 二级菜单 -->
+                <dd><a onclick="x_admin_show('修改密码','toPage.do?url=admin/infor/changePassword.html',500,350)" >修改密码</a></dd>
+                <dd><a href="logoutAdmin.do">退出</a></dd>
+            </dl>
+        </li>
+    </ul>
+
+</div>
+<!-- 顶部结束 -->
+<!-- 中部开始 -->
+<!-- 左侧菜单开始 -->
+<div class="left-nav">
+    <div id="side-nav">
+        <ul id="nav">
+            <li>
+                <a href="javascript:;">
+                    <!-- <i class="iconfont">&#xe6b8;</i> -->
+                    <cite><img src="/ssm_esms/img/icon/员工管理.png" height="10%" width="10%">&nbsp&nbsp&nbsp员工管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a _href="toPage.do?url=admin/employee-list.html">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>员工列表</cite>
+
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <!-- <i class="iconfont">&#xe723;</i> -->
+                    <cite><img src="/ssm_esms/img/icon/部门.png" height="10%" width="10%">&nbsp&nbsp&nbsp部门管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a _href="toPage.do?url=admin/department-list.html">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>部门列表</cite>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <!-- <i class="iconfont">&#xe723;</i> -->
+                    <cite><img src="/ssm_esms/img/icon/岗位.png" height="10%" width="10%">&nbsp&nbsp&nbsp岗位管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a _href="toPage.do?url=admin/position-list.html">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>岗位列表</cite>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <!-- <i class="iconfont">&#xe723;</i> -->
+                    <cite><img src="/ssm_esms/img/icon/职称奖金.png" height="10%" width="10%">&nbsp&nbsp&nbsp职称奖金管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+
+                        <a _href="toPage.do?url=admin/rankBonusList.html">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>职称列表</cite>
+                        </a>
+                    </li >
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <!-- <i class="iconfont">&#xe723;</i> -->
+                    <cite><img src="/ssm_esms/img/icon/工龄奖金.png" height="10%" width="10%">&nbsp&nbsp&nbsp工龄奖金管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+
+                        <a _href="toPage.do?url=admin/workingYearsBonusList.html">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>工龄列表</cite>
+                        </a>
+                    </li >
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <!-- <i class="iconfont">&#xe723;</i> -->
+                    <cite><img src="/ssm_esms/img/icon/工资项管理.png" height="10%" width="10%">&nbsp&nbsp&nbsp工资项管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+
+                        <a _href="toPage.do?url=admin/wageManagement.html">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>工资项</cite>
+                        </a>
+                    </li >
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <!-- <i class="iconfont">&#xe723;</i> -->
+                    <cite><img src="/ssm_esms/img/icon/项目.png" height="10%" width="10%">&nbsp&nbsp&nbsp项目调度管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a _href="toPage.do?url=admin/monthlyattendance-list.html">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>项目调度列表</cite>
+                        </a>
+                    </li>
+                    <li>
+                        <a _href="toPage.do?url=admin/importData/importAttendance.html">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>导入项目调度记录</cite>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <!-- <i class="iconfont">&#xe726;</i> -->
+                    <cite><img src="/ssm_esms/img/icon/结算.png" height="10%" width="10%">&nbsp&nbsp&nbsp工资管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a _href="toPage.do?url=admin/importData/importReissue.html">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>导入其他工资项</cite>
+                        </a>
+                    </li>
+                    <li>
+                        <a _href="toPage.do?url=admin/salary/salarySettlement.html">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>工资结算</cite>
+                        </a>
+                    </li>
+                    <li>
+                        <a _href="toPage.do?url=admin/salary/salaryIssueList.html">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>工资发放</cite>
+                        </a>
+                    </li>
+                    <li>
+                        <a _href="toPage.do?url=admin/salary/salary-list.html">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>工资查询</cite>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <!-- <i class="iconfont">&#xe726;</i> -->
+                    <cite><img src="/ssm_esms/img/icon/列表.png" height="10%" width="10%">&nbsp&nbsp&nbsp图表显示</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a _href="toPage.do?url=admin/echarts/employee-nums.html">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>部门人数统计柱状图</cite>
+                        </a>
+                    </li>
+                    <li>
+                        <a _href="toPage.do?url=admin/echarts/department-salary.html">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>各部门的工资折线图</cite>
+                        </a>
+                    </li>
+                    <li>
+                        <a _href="toPage.do?url=admin/echarts/salary-percent.html">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>部门工资占比饼状图</cite>
+                        </a>
+                    </li>
+                    <li>
+                        <a _href="toPage.do?url=admin/echarts/month-salary.html">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>各年月工资对比图</cite>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+<!-- <div class="x-slide_left"></div> -->
+<!-- 左侧菜单结束 -->
+<!-- 右侧主体开始 -->
+<div class="page-content">
+    <div class="layui-tab tab" lay-filter="xbs_tab" lay-allowclose="false">
+        <ul class="layui-tab-title">
+            <li class="home"><i class="layui-icon">&#xe68e;</i>首页</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <iframe src='toPage.do?url=admin/welcome.html' frameborder="0" scrolling="yes"
+                        class="x-iframe"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="page-content-bg"></div>
+<!-- 右侧主体结束 -->
+<!-- 中部结束 -->
+<!-- 底部开始 -->
+<div class="footer">
+    <div class="copyright">Copyright ©2019 工资管理系统</div>
+</div>
+<!-- 底部结束 -->
+<script>
+    window.onload = function () {
+        $.get("getAdminAccount.do", function (result) {
+            $("#account").html(result);
+        });
+    }
+    function changePassword() {
+        layer.alert('内容')
+    }
+</script>
+</body>
+</html>

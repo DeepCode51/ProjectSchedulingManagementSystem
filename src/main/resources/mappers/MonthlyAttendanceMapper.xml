@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.esms.dao.MonthlyAttendanceMapper">
+  <resultMap id="BaseResultMap" type="com.esms.po.MonthlyAttendance">
+    <id column="ma_id" jdbcType="INTEGER" property="maId" />
+    <result column="e_id" jdbcType="INTEGER" property="eId" />
+    <result column="attendance_time" jdbcType="DATE" property="attendanceTime" />
+    <result column="sick_leave_num" jdbcType="INTEGER" property="sickLeaveNum" />
+    <result column="overtime_hour" jdbcType="DOUBLE" property="overtimeHour" />
+    <result column="weekend_hour" jdbcType="DOUBLE" property="weekendHour" />
+    <result column="holiday_hour" jdbcType="DOUBLE" property="holidayHour" />
+    <result column="late_num" jdbcType="INTEGER" property="lateNum" />
+    <result column="early_num" jdbcType="INTEGER" property="earlyNum" />
+    <result column="absence_num" jdbcType="INTEGER" property="absenceNum" />
+    <result column="business_travel_num" jdbcType="INTEGER" property="businessTravelNum" />
+    <result column="compassionate_leave_num" jdbcType="INTEGER" property="compassionateLeaveNum" />
+    <association property="employee" javaType="com.esms.po.Employee"
+                 select="com.esms.dao.EmployeeMapper.selectByPrimaryKey" column="e_id">
+    </association>
+  </resultMap>
+
+  <delete id="deleteByQuery" parameterType="java.util.ArrayList">
+    delete from monthly_attendance where ma_id in
+    <foreach  collection="array" item="id" separator="," open="(" close=")">
+      #{id}
+    </foreach>
+  </delete>
+
+  <sql id="Base_Column_List">
+    ma_id, e_id, attendance_time, sick_leave_num, overtime_hour, weekend_hour, holiday_hour, 
+    late_num, early_num, absence_num, business_travel_num, compassionate_leave_num
+  </sql>
+  <select id="selectByeIdAndDate"  resultMap="BaseResultMap">
+    select *
+    from monthly_attendance
+    where e_id = #{arg0} and strcmp(date_format(attendance_time,'%Y-%m'),#{arg1}) = 0
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from monthly_attendance
+    where ma_id = #{maId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from monthly_attendance
+    where ma_id = #{maId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.esms.po.MonthlyAttendance">
+    <selectKey keyProperty="maId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into monthly_attendance (e_id, attendance_time, sick_leave_num,
+    overtime_hour, weekend_hour, holiday_hour,
+    late_num, early_num, absence_num,
+    business_travel_num, compassionate_leave_num
+    )
+    values (#{employee.eId,jdbcType=INTEGER}, #{attendanceTime,jdbcType=DATE}, #{sickLeaveNum,jdbcType=INTEGER},
+    #{overtimeHour,jdbcType=DOUBLE}, #{weekendHour,jdbcType=DOUBLE}, #{holidayHour,jdbcType=DOUBLE},
+    #{lateNum,jdbcType=INTEGER}, #{earlyNum,jdbcType=INTEGER}, #{absenceNum,jdbcType=INTEGER},
+    #{businessTravelNum,jdbcType=INTEGER}, #{compassionateLeaveNum,jdbcType=INTEGER}
+    )
+  </insert>
+  <insert id="insertSelective" parameterType="com.esms.po.MonthlyAttendance">
+    <selectKey keyProperty="maId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into monthly_attendance
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="employee != null">
+        e_id,
+      </if>
+      <if test="attendanceTime != null">
+        attendance_time,
+      </if>
+      <if test="sickLeaveNum != null">
+        sick_leave_num,
+      </if>
+      <if test="overtimeHour != null">
+        overtime_hour,
+      </if>
+      <if test="weekendHour != null">
+        weekend_hour,
+      </if>
+      <if test="holidayHour != null">
+        holiday_hour,
+      </if>
+      <if test="lateNum != null">
+        late_num,
+      </if>
+      <if test="earlyNum != null">
+        early_num,
+      </if>
+      <if test="absenceNum != null">
+        absence_num,
+      </if>
+      <if test="businessTravelNum != null">
+        business_travel_num,
+      </if>
+      <if test="compassionateLeaveNum != null">
+        compassionate_leave_num,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="employee != null">
+        #{employee.eId,jdbcType=INTEGER},
+      </if>
+      <if test="attendanceTime != null">
+        #{attendanceTime,jdbcType=DATE},
+      </if>
+      <if test="sickLeaveNum != null">
+        #{sickLeaveNum,jdbcType=INTEGER},
+      </if>
+      <if test="overtimeHour != null">
+        #{overtimeHour,jdbcType=DOUBLE},
+      </if>
+      <if test="weekendHour != null">
+        #{weekendHour,jdbcType=DOUBLE},
+      </if>
+      <if test="holidayHour != null">
+        #{holidayHour,jdbcType=DOUBLE},
+      </if>
+      <if test="lateNum != null">
+        #{lateNum,jdbcType=INTEGER},
+      </if>
+      <if test="earlyNum != null">
+        #{earlyNum,jdbcType=INTEGER},
+      </if>
+      <if test="absenceNum != null">
+        #{absenceNum,jdbcType=INTEGER},
+      </if>
+      <if test="businessTravelNum != null">
+        #{businessTravelNum,jdbcType=INTEGER},
+      </if>
+      <if test="compassionateLeaveNum != null">
+        #{compassionateLeaveNum,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.esms.po.MonthlyAttendance">
+    update monthly_attendance
+    <set>
+      <if test="employee != null">
+        e_id = #{employee.eId,jdbcType=INTEGER},
+      </if>
+      <if test="attendanceTime != null">
+        attendance_time = #{attendanceTime,jdbcType=DATE},
+      </if>
+      <if test="sickLeaveNum != null">
+        sick_leave_num = #{sickLeaveNum,jdbcType=INTEGER},
+      </if>
+      <if test="overtimeHour != null">
+        overtime_hour = #{overtimeHour,jdbcType=DOUBLE},
+      </if>
+      <if test="weekendHour != null">
+        weekend_hour = #{weekendHour,jdbcType=DOUBLE},
+      </if>
+      <if test="holidayHour != null">
+        holiday_hour = #{holidayHour,jdbcType=DOUBLE},
+      </if>
+      <if test="lateNum != null">
+        late_num = #{lateNum,jdbcType=INTEGER},
+      </if>
+      <if test="earlyNum != null">
+        early_num = #{earlyNum,jdbcType=INTEGER},
+      </if>
+      <if test="absenceNum != null">
+        absence_num = #{absenceNum,jdbcType=INTEGER},
+      </if>
+      <if test="businessTravelNum != null">
+        business_travel_num = #{businessTravelNum,jdbcType=INTEGER},
+      </if>
+      <if test="compassionateLeaveNum != null">
+        compassionate_leave_num = #{compassionateLeaveNum,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ma_id = #{maId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.esms.po.MonthlyAttendance">
+    update monthly_attendance
+    set e_id = #{employee.eId,jdbcType=INTEGER},
+      attendance_time = #{attendanceTime,jdbcType=DATE},
+      sick_leave_num = #{sickLeaveNum,jdbcType=INTEGER},
+      overtime_hour = #{overtimeHour,jdbcType=DOUBLE},
+      weekend_hour = #{weekendHour,jdbcType=DOUBLE},
+      holiday_hour = #{holidayHour,jdbcType=DOUBLE},
+      late_num = #{lateNum,jdbcType=INTEGER},
+      early_num = #{earlyNum,jdbcType=INTEGER},
+      absence_num = #{absenceNum,jdbcType=INTEGER},
+      business_travel_num = #{businessTravelNum,jdbcType=INTEGER},
+      compassionate_leave_num = #{compassionateLeaveNum,jdbcType=INTEGER}
+    where ma_id = #{maId,jdbcType=INTEGER}
+  </update>
+<!--by admin 按员工id和年份查询考勤-->
+  <select id="selectMonthlyAttendanceMapperByeEidAndTime" parameterType="map" resultType="com.esms.po.MonthlyAttendance">
+        select *
+        from
+        monthly_attendance ma
+        <where>
+          ma.e_id = #{e_id}
+          <if test="attendanceTime!=''">
+            and attendance_time like concat('%',#{attendance_time},'%')
+          </if>
+        </where>
+        ORDER BY attendance_time DESC
+    </select>
+</mapper>

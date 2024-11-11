@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ESMS | 项目调度管理系统</title>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/ssm_esms/static/css/font.css">
+    <link rel="stylesheet" href="/ssm_esms/static/css/xadmin.css">
+    <link rel="stylesheet" href="/ssm_esms/static/css/bootstrap.css">
+    <script type="text/javascript" src="/ssm_esms/static/js/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="/ssm_esms/static/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="/ssm_esms/static/js/xadmin.js"></script>
+
+</head>
+<body class="login-bg">
+<div class="login layui-anim layui-anim-up">
+    <div class="message">项目调度管理系统&nbsp&nbsp|&nbsp&nbsp员工登录</div>
+    <div id="darkbannerwrap"></div>
+    <form method="post">
+        <input id="username" name="username" placeholder="工号" type="text" lay-verify="required" class="layui-input">
+        <hr class="hr15">
+        <input id="password" name="password" lay-verify="required" placeholder="密码" type="password" class="layui-input">
+        <hr class="hr15">
+        <input id="identifyingcode" name="identifyingcode" lay-verify="required" placeholder="验证码" type="text"
+               style="width:30%;margin-right: 20px">
+        <a href="javascript:void(0);" onclick="VerificationCode();">
+            <img id="captchaImage" src="changeCode.do" style="height: 48px;width: 120px;"/>
+        </a>
+        <hr class="hr15">
+    </form>
+    <input value="登录" style="width:100%;" type="submit" onclick="login();">
+    <hr class="hr20">
+</div>
+
+<script>
+    // 更换验证码
+    function VerificationCode() {
+        $("#captchaImage").attr("src", "changeCode.do?timestamp=" + (new Date()).valueOf());
+    }
+
+    function login() {
+        var username = $("#username").val();
+        var password = $("#password").val();
+        var identifyingcode = $("#identifyingcode").val()
+
+        if (username == ""){
+            layer.msg("工号不能为空", {time: 2000, icon:5,anim: 6})
+            $("#username").face()
+            return false;
+        }
+        if (password == ""){
+            layer.msg("密码不能为空", {time: 2000, icon:5,anim: 6})
+            $("#password").face()
+            return false;
+        }
+        if (identifyingcode == ""){
+            layer.msg("验证码不能为空", {time: 2000, icon:5,anim: 6})
+            $("#identifyingcode").face()
+            return false;
+        }
+
+        //这是使用ajax的方式提交
+        $.ajax({
+            type: 'post',
+            url: 'employeeLogin.do',
+            //data:$('#loginInputForm').serialize(),
+            data: {
+                'username': username,
+                'password': password,
+                'identifyingcode': identifyingcode,
+            },
+            dataType: 'json',
+            success: function (data) {
+                var code = data.status;
+                if (code == 0) {
+                    layer.msg(data.msg, {time: 2000, icon:2,anim: 6});
+                    $("#captchaImage").attr("src", "changeCode.do?timestamp=" + (new Date()).valueOf());
+                    $("#identifyingcode").val("").focus(); // 清空并获得焦点
+                } else if (code == 200) {
+                    // layer.msg("登陆成功，正在跳转……")
+                    window.location.href = data.url;
+                } else if (code == 500) {
+                    layer.msg(data.msg, {time: 2000, icon:2,anim: 6});
+                    $("#password").val("").focus(); // 清空并获得焦点
+                    $("#identifyingcode").val(""); // 清空并获得焦点
+                    $("#captchaImage").attr("src", "changeCode.do?timestamp=" + (new Date()).valueOf());
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

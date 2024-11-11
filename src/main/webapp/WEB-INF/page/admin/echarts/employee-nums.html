@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>各部门的员工数量柱状图</title>
+    <link rel="stylesheet" href="/ssm_esms/static/css/font.css">
+    <link rel="stylesheet" href="/ssm_esms/static/css/xadmin.css">
+    <script type="text/javascript" src="/ssm_esms/static/js/echarts.js"></script>
+    <script type="text/javascript" src="/ssm_esms/static/js/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="/ssm_esms/static/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="/ssm_esms/static/js/xadmin.js"></script>
+</head>
+<body>
+<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a >首页</a>
+        <a >图表显示</a>
+        <a>
+          <cite>各部门人数统计柱状图</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+<br>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div id="main" style="width: 800px;height:400px;"></div>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+    var option = {
+        title: {
+            text: '各部门员工的数量柱状图',
+        },
+        color: ['#3398DB'],
+        tooltip : {
+            trigger: 'axis',
+            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis : [
+            {
+                type : 'category',
+                data : [],
+                axisTick: {
+                    alignWithLabel: true
+                }
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        series : [
+            {
+                name:'人数',
+                type:'bar',
+                barWidth: '40%',
+                data:[]
+            }
+        ]
+    };
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+
+    myChart.showLoading();    //数据加载完之前先显示一段简单的loading动画
+    var departments = [];    //部门数组（用于横坐标）
+    var nums = [];            //员工数量数组（用于纵坐标）
+    $.ajax({
+        type: 'get',
+        url: '/ssm_esms/showEmployeeNums.do',//请求数据的地址
+        dataType: "json",        //返回数据形式为json
+        success: function (result) {
+            //请求成功时执行该函数内容，result即为服务器返回的json对象
+            $.each(result.list, function (index, item) {
+                departments.push(item.department);    //挨个取出类别并填入类别数组
+                nums.push({
+                    name: item.department,
+                    value: item.num
+                });
+            });
+            myChart.hideLoading();    //隐藏加载动画
+            myChart.setOption({        //加载数据图表
+                /*legend: {
+                    data: departments
+                },*/
+                xAxis:{
+                    data: departments
+                },
+                series: [{
+
+                    data: nums
+                }]
+            });
+        },
+        error: function (errorMsg) {
+            //请求失败时执行该函数
+            alert("图表请求数据失败!");
+            myChart.hideLoading();
+        }
+    });
+</script>
+</body>
+</html>

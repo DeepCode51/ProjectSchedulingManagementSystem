@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>ESMS</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/ssm_esms/static/css/font.css">
+    <link rel="stylesheet" href="/ssm_esms/static/css/xadmin.css">
+    <script type="text/javascript" src="/ssm_esms/static/js/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="/ssm_esms/static/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="/ssm_esms/static/js/xadmin.js"></script>
+</head>
+
+<body class="layui-anim layui-anim-up">
+
+<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a>首页</a>
+        <a>工资管理</a>
+        <a>
+          <cite>工资详情</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+       href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+<div class="x-body" id="container">
+    <div class="demoTable">
+        年度查询：
+        <div class="layui-inline">
+            <input name="d" id="year" lay-verify="date" autocomplete="off" class="layui-input" type="text" readonly>
+        </div>
+        <button class="layui-btn" data-type="reload">查&nbsp;&nbsp;询</button>
+    </div>
+
+    <div style="text-align: center">
+        <table class="layui-table" lay-data="{height: 'full', cellMinWidth:80, url:'employeeSalaryList.do',even: true, page:true,initSort: {field: 'sTime', type: 'desc'}, id:'idTest'}" lay-filter="demo">
+            <thead>
+            <tr>
+                <th lay-data="{field:'sTime',sort: true ,width:83, fixed: true,align: 'center'}" rowspan="2">月份</th>
+                <th lay-data="{field:'shouldPay', width:86, align: 'center'}" rowspan="2">应发工资</th>
+                <th lay-data="{field:'basePay', width:86, align: 'center'}" rowspan="2">基本工资</th>
+                <th lay-data="{field:'rissuePay', width:86, align: 'center'}" rowspan="2">其他工资</th>
+                <th lay-data="{minWidth:100,align: 'center'}" colspan="4">补贴</th>
+                <th lay-data="{minWidth:100,align: 'center'}" colspan="4">奖金</th>
+                <th lay-data="{minWidth:86,align: 'center'}" colspan="6">五险一金</th>
+                <th lay-data="{minWidth:86,align: 'center'}" colspan="5">工资扣额</th>
+
+                <th lay-data="{field:'actualPay', width:100,sort: true , fixed: 'right',align: 'center'}" rowspan="2">实发工资</th>
+                <th lay-data="{field:'sState', templet: '#checkboxTpl',unresize: true ,width:88, fixed: 'right',align: 'center'}" rowspan="2">发放</th>
+            </tr>
+            <tr>
+                <th lay-data="{field:'foodPay', minWidth:60,align: 'center'}">餐饮</th>
+                <th lay-data="{field:'postPay', minWidth:60,align: 'center'}">岗位</th>
+                <th lay-data="{field:'trafficPay', minWidth:60,align: 'center'}">交通</th>
+                <th lay-data="{field:'businessTravelPay', minWidth:60,align: 'center'}">出差</th>
+
+                <th lay-data="{field:'workingYearPay', minWidth:60,align: 'center'}">工龄</th>
+                <th lay-data="{field:'rankPay', minWidth:60,align: 'center'}">职称</th>
+                <th lay-data="{field:'overtimePay', minWidth:70,align: 'center'}">加班</th>
+                <th lay-data="{field:'fullAttendancePay', minWidth:60,align: 'center'}">全勤</th>
+
+                <th lay-data="{field:'persionPay', minWidth:70,align: 'center'}">养老</th>
+                <th lay-data="{field:'medicalPay',  minWidth:70,align: 'center'}">医疗</th>
+                <th lay-data="{field:'unemploymentPay', minWidth:60,align: 'center'}">失业</th>
+                <th lay-data="{field:'injuryPay', minWidth:60,align: 'center'}">工伤</th>
+                <th lay-data="{field:'birthPay', minWidth:60,align: 'center'}">生育</th>
+                <th lay-data="{field:'housingPay', minWidth:100,align: 'center'}">住房公积金</th>
+
+                <th lay-data="{field:'latePay',  minWidth:60,align: 'center'}">迟到</th>
+                <th lay-data="{field:'earlyPay', minWidth:60,align: 'center'}">早退</th>
+                <th lay-data="{field:'sickPay', minWidth:60,align: 'center'}">病假</th>
+                <th lay-data="{field:'thingPay', minWidth:60,align: 'center'}">事假</th>
+                <th lay-data="{field:'individualIncomeTax', minWidth:100,align: 'center'}">个人所得税</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+
+
+    <table class="layui-hide" id="idTest"></table>
+    <script type="text/html" id="checkboxTpl">
+        <!-- 这里的 checked 的状态只是演示 -->
+            <input type="checkbox" disabled="" name="lock" value="{{d.sState}}" title="是" lay-filter="lockDemo" {{ d.sState== 1 ?'checked'
+            : '' }}>
+    </script>
+</div>
+</body>
+<script>
+    var year = new Date().getFullYear();
+    layui.use(['laydate','table'], function(){
+            var laydate = layui.laydate
+            ,table = layui.table;
+        // table.render({
+        //     elem: '#idTest'
+        //     , url: "employeeSalaryList.do"
+        //     , cols: [[
+        //         {field: 'sTime', title: '时间', sort: true, width: 105, fixed: 'left', align: 'center'}
+        //         , {field: 'basePay', title: '基本', width: 75, align: 'center'}
+        //         , {field: 'foodPay', title: '餐饮', width: 75, align: 'center'}
+        //         , {field: 'postPay', title: '岗位', width: 75, align: 'center'}
+        //         , {field: 'workingYearPay', title: '工龄', width: 75, align: 'center'}
+        //         , {field: 'rankPay', title: '职称', width: 75, align: 'center'}
+        //         , {field: 'trafficPay', title: '交通', width: 75, align: 'center'}
+        //         , {field: 'persionPay', title: '养老', width: 75, align: 'center'}
+        //         , {field: 'medicalPay', title: '医疗', width: 75, align: 'center'}
+        //         , {field: 'unemploymentPay', title: '失业', width: 75, align: 'center'}
+        //         , {field: 'injuryPay', title: '工伤', width: 75, align: 'center'}
+        //         , {field: 'birthPay', title: '生育', width: 75, align: 'center'}
+        //         , {field: 'housingPay', title: '住房公积金', width: 75, align: 'center'}
+        //         , {field: 'latePay', title: '迟到', width: 75, align: 'center'}
+        //         , {field: 'earlyPay', title: '早退', width: 75, align: 'center'}
+        //         , {field: 'overtimePay', title: '加班', width: 75, align: 'center'}
+        //         , {field: 'sickPay', title: '病假', width: 75, align: 'center'}
+        //         , {field: 'thingPay', title: '事假', width: 75, align: 'center'}
+        //         , {field: 'businessTravelPay', title: '出差', width: 75, align: 'center'}
+        //         , {field: 'fullAttendancePay', title: '全勤奖', width: 75, align: 'center'}
+        //         , {field: 'rissuePay', title: '补发', width: 75, align: 'center'}
+        //         , {field: 'individualIncomeTax', title: '所得税', width: 75, align: 'center'}
+        //         , {field: 'shouldPay', title: '应发', width: 75, align: 'center'}
+        //         , {field: 'actualPay', title: '实发', sort: true, width: 90, fixed: 'right', align: 'center'}
+        //         , {
+        //             field: 'sState',
+        //             title: '发放',
+        //             width: 100,
+        //             fixed: 'right',
+        //             align: 'center',
+        //             templet: '#checkboxTpl',
+        //             unresize: true
+        //         }
+        //     ]]
+        //     , initSort: {field: 'sTime', type: 'desc'} // 默认日期降序
+        //     , page: true
+        //     ,height: 'full-135' //高度最大化减去差值
+        //     ,even: true //开启隔行背景
+        // });
+
+
+        //年月范围
+        laydate.render({
+            elem: '#year'
+            ,type: 'year'
+            ,value:year
+            ,isInitValue: true
+        });
+
+        var $ = layui.$, active = {
+            reload: function () {
+                var demoReload = $('#demoReload');
+                //执行重载
+                table.reload('idTest', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    },
+                    where: {
+                        year: $("#year").val()
+                    }
+                    , page: true
+                });
+            }
+        };
+        $('.demoTable .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+    //年度时间
+    // jeDate("#year", {
+    //     isinitVal: true,
+    //     festival: true,
+    //     format: 'YYYY',
+    //     initDate: [{YYYY: year}, false],
+    //     minDate: "2015", //最小时间
+    //     maxDate: year + "-", //最大日期（现在）
+    // });
+</script>
+</html>

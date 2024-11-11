@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.esms.dao.RankBonusMapper">
+  <resultMap id="BaseResultMap" type="com.esms.po.RankBonus">
+    <id column="rb_id" jdbcType="INTEGER" property="rbId" />
+    <result column="rank_name" jdbcType="VARCHAR" property="rankName" />
+    <result column="rb_bonus" jdbcType="INTEGER" property="rbBonus" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    rb_id, rank_name, rb_bonus
+  </sql>
+  <select id="findSelective" parameterType="com.esms.po.RankBonus" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from rank_bonus
+    <where>
+      <if test="rankName != '' and rankName != null">
+        and rank_name like concat('%',#{rankName,jdbcType=VARCHAR},'%')
+      </if>
+
+    </where>
+    order by rb_id DESC
+  </select>
+  <select id="selectAll" resultType="com.esms.po.RankBonus">
+    select * from rank_bonus order by rb_id DESC
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from rank_bonus
+    where rb_id = #{rbId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from rank_bonus
+    where rb_id = #{rbId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.esms.po.RankBonus">
+    <selectKey keyProperty="rbId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into rank_bonus (rank_name, rb_bonus)
+    values (#{rankName,jdbcType=VARCHAR}, #{rbBonus,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.esms.po.RankBonus">
+    <selectKey keyProperty="rbId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into rank_bonus
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="rankName != null">
+        rank_name,
+      </if>
+      <if test="rbBonus != null">
+        rb_bonus,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="rankName != null">
+        #{rankName,jdbcType=VARCHAR},
+      </if>
+      <if test="rbBonus != null">
+        #{rbBonus,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.esms.po.RankBonus">
+    update rank_bonus
+    <set>
+      <if test="rankName != null">
+        rank_name = #{rankName,jdbcType=VARCHAR},
+      </if>
+      <if test="rbBonus != null">
+        rb_bonus = #{rbBonus,jdbcType=INTEGER},
+      </if>
+    </set>
+    where rb_id = #{rbId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.esms.po.RankBonus">
+    update rank_bonus
+    set rank_name = #{rankName,jdbcType=VARCHAR},
+      rb_bonus = #{rbBonus,jdbcType=INTEGER}
+    where rb_id = #{rbId,jdbcType=INTEGER}
+  </update>
+  <select id="CountByRankName" parameterType="java.lang.String"  resultType="java.lang.Integer">
+    select count(*) from rank_bonus
+    where rank_name=#{ooo}
+  </select>
+  <select id="findByname" parameterType="String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from rank_bonus where rank_name = #{rankName,jdbcType=VARCHAR}
+  </select>
+
+</mapper>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8"/>
+    <title>各部门的工资折线图</title>
+    <link rel="stylesheet" href="/ssm_esms/static/css/font.css">
+    <link rel="stylesheet" href="/ssm_esms/static/css/xadmin.css">
+    <script type="text/javascript" src="/ssm_esms/static/js/echarts.js"></script>
+    <script type="text/javascript" src="/ssm_esms/static/js/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="/ssm_esms/static/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="/ssm_esms/static/js/xadmin.js"></script>
+</head>
+<body>
+<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a >首页</a>
+        <a >图表显示</a>
+        <a>
+          <cite>各部门的工资折线图</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+<div>
+    <br/>
+    <label>选择时间：</label>
+    <div class="layui-inline">
+        <!--<input class="dateinput dateicon" id="ymd01" type="text" placeholder="点击此处" readonly>-->
+        <input id="ymd01" lay-verify="date" autocomplete="off" class="layui-input" type="text" placeholder="点击此处"
+               readonly>
+    </div>&nbsp;&nbsp;
+    <button id="comfire" class="layui-btn" type="button">查看</button>
+    <br/></br>
+</div>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div id="main" style="width: 800px;height:400px;"></div>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var year = new Date().getFullYear();
+    var month = new Date().getMonth();
+    var myChart = echarts.init(document.getElementById('main'));
+    var option = {
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data: ['最低工资', '平均工资', '最高工资']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: []
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                name: '最低工资',
+                type: 'line',
+
+                data: []
+            },
+            {
+                name: '平均工资',
+                type: 'line',
+
+                data: []
+            },
+            {
+                name: '最高工资',
+                type: 'line',
+
+                data: []
+            }
+        ]
+    };
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+
+    //ajax获取数据函数
+    function read(date) {
+        //alert(date);
+        myChart.showLoading();    //数据加载完之前先显示一段简单的loading动画
+        var departments = [];    //部门数组（用于横坐标）
+        //var nums = [];            //员工数量数组（用于纵坐标）
+        var lowestSalary = [];
+        var averageSalary = [];
+        var highestSalary = [];
+
+        $.ajax({
+            type: 'get',
+            url: '/ssm_esms/showDepartmentSalary.do?date=' + date,//请求数据的地址
+            dataType: "json",        //返回数据形式为json
+            success: function (result) {
+                //请求成功时执行该函数内容，result即为服务器返回的json对象
+                $.each(result.list, function (index, item) {
+                    departments.push(item.department);    //挨个取出类别并填入类别数组
+
+                    lowestSalary.push(item.salary[0])
+                    /*lowestSalary.push({
+                        name: item.department,
+                        value: item.salary[0]
+                    });*/
+                    averageSalary.push(item.salary[1])
+                    /*averageSalary.push({
+                       // name: item.department,
+                        value: item.salary[1]
+                    });*/
+                    highestSalary.push(item.salary[2])
+                    /*highestSalary.push({
+                        //name: item.department,
+                        value: item.salary[2]
+                    });*/
+                });
+                myChart.hideLoading();    //隐藏加载动画
+                myChart.setOption({        //加载数据图表
+                    title: {
+                        text: '各部门的工资折线图(' + date + ")"
+                    },
+                    /*legend: {
+                        data: departments
+                    },*/
+                    xAxis: {
+                        data: departments
+                    },
+                    series: [
+                        {
+                            data: lowestSalary
+                        },
+                        {
+                            data: averageSalary
+                        },
+                        {
+                            data: highestSalary
+                        }
+                    ]
+                });
+            },
+            error: function (errorMsg) {
+                //请求失败时执行该函数
+                alert("图表请求数据失败!");
+                myChart.hideLoading();
+            }
+        });
+    }
+
+    //页面加载时，调用read()发出ajax请求
+    $(function () {
+        //参数为当前年上一月
+        read(year + '-' + "0" + month);
+    })
+
+    // //点击显示（YYYY年MM月）格式
+    // jeDate("#ymd01",{
+    //     isinitVal:true,
+    //     festival: true,
+    //     format: 'YYYY-MM',
+    //     initDate:[{YYYY:year,MM:month},false],
+    //     minDate:"2017-09",      //最小时间
+    //     maxDate:year+"-"+month,              //最大日期（当前年，上一月）
+    // });
+    layui.use(['laydate'], function () {
+        var laydate = layui.laydate;
+
+        //年月范围
+        laydate.render({
+            elem: '#ymd01'
+            , type: 'month'
+        });
+    });
+
+    //点击查看按钮
+    $("#comfire").click(function () {
+        var time = $("#ymd01").val();
+        //alert(time);
+        read(time);
+    })
+
+
+</script>
+</body>
+</html>

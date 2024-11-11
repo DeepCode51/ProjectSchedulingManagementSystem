@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8" />
+    <title>各年月工资对比图</title>
+    <link rel="stylesheet" href="/ssm_esms/static/css/font.css">
+    <link rel="stylesheet" href="/ssm_esms/static/css/xadmin.css">
+    <script type="text/javascript" src="/ssm_esms/static/js/echarts.js"></script>
+    <script type="text/javascript" src="/ssm_esms/static/js/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="/ssm_esms/static/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="/ssm_esms/static/js/xadmin.js"></script>
+</head>
+<body>
+<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a >首页</a>
+        <a >图表显示</a>
+        <a>
+          <cite>各年月工资对比图</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+<br>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div id="main" style="width: 800px;height:400px;"></div>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var year = new Date().getFullYear();
+    var month = new Date().getMonth();
+    var myChart = echarts.init(document.getElementById('main'));
+    var option = {
+        title:{
+            text: '近三年每月企业工资支出（单位:元）',
+        },
+        tooltip : {
+            trigger: 'axis',
+            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+        },
+        legend: {
+
+            x: 'right',
+            data:[]
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis : [
+            {
+                type : 'category',
+                data : ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月',]
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        series : [
+            {
+                name:'',
+                type:'bar',
+                data:[]
+            },
+            {
+                name:'',
+                type:'bar',
+                data:[]
+            },
+            {
+                name:'联盟广告',
+                type:'bar',
+                data:[]
+            }
+        ]
+    };
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+    //ajax获取数据函数
+        function read(){
+            myChart.showLoading();    //数据加载完之前先显示一段简单的loading动画
+            var years = [];    //年份数组
+            var salary = [];   //每年十二个月的工资数组（{}，{}，...）
+
+            $.ajax({
+                type: 'get',
+                url: '/ssm_esms/showMonthSalary.do',//请求数据的地址
+                dataType: "json",        //返回数据形式为json
+                success: function (result) {
+                    //请求成功时执行该函数内容，result即为服务器返回的json对象
+                    $.each(result.list, function (index, item) {
+                        years.push(item.year);    //挨个取出类别并填入类别数组
+                        salary.push(item.salary)
+                    });
+                    myChart.hideLoading();    //隐藏加载动画
+                    myChart.setOption({        //加载数据图表
+                        legend: {
+                            data: years
+                        },
+                        series: [
+                            {
+                                name:years[0],
+                                data:salary[0]
+                            },
+                            {
+                                name:years[1],
+                                data:salary[1]
+                            },
+                            {
+                                name:years[2],
+                                data:salary[2]
+                            }
+                        ]
+                    });
+                },
+                error: function (errorMsg) {
+                    //请求失败时执行该函数
+                    alert("图表请求数据失败!");
+                    myChart.hideLoading();
+                }
+            });
+        }
+        //页面加载时，调用read()发出ajax请求
+        $(function () {
+            read();
+        })
+
+
+</script>
+</body>
+</html>

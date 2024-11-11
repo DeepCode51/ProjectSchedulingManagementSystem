@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.esms.dao.WorkingYearsBonusMapper">
+  <resultMap id="BaseResultMap" type="com.esms.po.WorkingYearsBonus">
+    <id column="wyb_id" jdbcType="INTEGER" property="wybId" />
+    <result column="wyb_year" jdbcType="INTEGER" property="wybYear" />
+    <result column="wyb_bonus" jdbcType="DOUBLE" property="wybBonus" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    wyb_id, wyb_year, wyb_bonus
+  </sql>
+  <select id="findSelective" parameterType="com.esms.po.WorkingYearsBonus" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from working_years_bonus
+    <where>
+      <if test="wybYear >0">
+        and wyb_year =#{wybYear,jdbcType=INTEGER}
+      </if>
+
+    </where>
+    order by wyb_id DESC
+  </select>
+  <select id="selectAll" resultType="com.esms.po.WorkingYearsBonus">
+    select * from working_years_bonus order by wyb_id DESC
+  </select>
+  <select id="countByYear" resultType="java.lang.Integer">
+    select count(*)from working_years_bonus
+    where wyb_year=#{ooo}
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from working_years_bonus
+    where wyb_id = #{wybId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from working_years_bonus
+    where wyb_id = #{wybId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.esms.po.WorkingYearsBonus">
+    <selectKey keyProperty="wybId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into working_years_bonus (wyb_year, wyb_bonus)
+    values (#{wybYear,jdbcType=INTEGER}, #{wybBonus,jdbcType=DOUBLE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.esms.po.WorkingYearsBonus">
+    <selectKey keyProperty="wybId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into working_years_bonus
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="wybYear != null">
+        wyb_year,
+      </if>
+      <if test="wybBonus != null">
+        wyb_bonus,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="wybYear != null">
+        #{wybYear,jdbcType=INTEGER},
+      </if>
+      <if test="wybBonus != null">
+        #{wybBonus,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.esms.po.WorkingYearsBonus">
+    update working_years_bonus
+    <set>
+      <if test="wybYear != null">
+        wyb_year = #{wybYear,jdbcType=INTEGER},
+      </if>
+      <if test="wybBonus != null">
+        wyb_bonus = #{wybBonus,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where wyb_id = #{wybId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.esms.po.WorkingYearsBonus">
+    update working_years_bonus
+    set wyb_year = #{wybYear,jdbcType=INTEGER},
+      wyb_bonus = #{wybBonus,jdbcType=DOUBLE}
+    where wyb_id = #{wybId,jdbcType=INTEGER}
+  </update>
+  <select id="findByYear" parameterType="int" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from working_years_bonus where wyb_year = #{wybYear,jdbcType=INTEGER}
+  </select>
+</mapper>

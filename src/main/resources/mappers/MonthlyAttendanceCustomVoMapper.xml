@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.esms.dao.MonthlyAttendanceCustomVoMapper">
+    <resultMap id="BaseResultMap" type="com.esms.vo.MonthlyAttendanceCustomVo">
+        <result column="ma_id" jdbcType="INTEGER" property="monthlyAttendance.maId"/>
+        <result column="e_id" jdbcType="INTEGER" property="monthlyAttendance.eId" />
+        <result column="attendance_time" jdbcType="DATE" property="monthlyAttendance.attendanceTime"/>
+        <result column="sick_leave_num" jdbcType="INTEGER" property="monthlyAttendance.sickLeaveNum"/>
+        <result column="overtime_hour" jdbcType="DOUBLE" property="monthlyAttendance.overtimeHour"/>
+        <result column="weekend_hour" jdbcType="DOUBLE" property="monthlyAttendance.weekendHour"/>
+        <result column="holiday_hour" jdbcType="DOUBLE" property="monthlyAttendance.holidayHour"/>
+        <result column="late_num" jdbcType="INTEGER" property="monthlyAttendance.lateNum"/>
+        <result column="early_num" jdbcType="INTEGER" property="monthlyAttendance.earlyNum"/>
+        <result column="absence_num" jdbcType="INTEGER" property="monthlyAttendance.absenceNum"/>
+        <result column="business_travel_num" jdbcType="INTEGER" property="monthlyAttendance.businessTravelNum"/>
+        <result column="compassionate_leave_num" jdbcType="INTEGER" property="monthlyAttendance.compassionateLeaveNum"/>
+
+        <result column="e_id" jdbcType="INTEGER" property="employee.eId"/>
+        <result column="e_account" jdbcType="VARCHAR" property="employee.eAccount"/>
+        <result column="e_password" jdbcType="VARCHAR" property="employee.ePassword"/>
+        <result column="e_name" jdbcType="VARCHAR" property="employee.eName"/>
+        <result column="e_idcard" jdbcType="VARCHAR" property="employee.eIdcard"/>
+        <result column="e_sex" jdbcType="VARCHAR" property="employee.eSex"/>
+        <result column="e_dagree" jdbcType="VARCHAR" property="employee.eDagree"/>
+        <result column="e_birthday" jdbcType="DATE" property="employee.eBirthday"/>
+        <result column="e_email" jdbcType="VARCHAR" property="employee.eEmail"/>
+        <result column="e_phone" jdbcType="VARCHAR" property="employee.ePhone"/>
+        <result column="e_hometown" jdbcType="VARCHAR" property="employee.eHometown"/>
+        <result column="e_rank" jdbcType="INTEGER" property="employee.eRank"/>
+        <result column="e_head_path" jdbcType="VARCHAR" property="employee.eHeadPath"/>
+        <result column="e_urgent_person" jdbcType="VARCHAR" property="employee.eUrgentPerson"/>
+        <result column="e_urgent_phone" jdbcType="VARCHAR" property="employee.eUrgentPhone"/>
+        <result column="p_id" jdbcType="INTEGER" property="employee.pId"/>
+        <result column="d_id" jdbcType="INTEGER" property="employee.dId"/>
+        <result column="e_base_pay" jdbcType="DOUBLE" property="employee.eBasePay"/>
+        <result column="e_isdel" jdbcType="INTEGER" property="employee.eIsdel"/>
+        <result column="e_entry_time" jdbcType="DATE" property="employee.eEntryTime"/>
+        <result column="e_leave_time" jdbcType="DATE" property="employee.eLeaveTime"/>
+
+        <result column="d_id" jdbcType="INTEGER" property="department.dId"/>
+        <result column="d_name" jdbcType="VARCHAR" property="department.dName"/>
+        <result column="d_remark" jdbcType="VARCHAR" property="department.dRemark"/>
+        <result column="d_isdel" jdbcType="INTEGER" property="department.dIsdel"/>
+    </resultMap>
+    <select id="selectMonthlyAttendanceCustomVoMapperByeAccountAnddIdAndTime" parameterType="map" resultMap="BaseResultMap" >
+        select *
+--             ma.ma_id, ma.attendance_time, ma.sick_leave_num, ma.overtime_hour, ma.weekend_hour, ma.holiday_hour, ma.late_num,  ma.early_num, ma.absence_num, ma.business_travel_num, ma.compassionate_leave_num,
+--             e.e_id, e.e_account, e.e_password, e.e_name, e.e_idcard, e_sex, e.e_dagree, e.e_birthday, e.e_email, e.e_phone, e.e_hometown, e.e_rank, e.e_head_path, e.e_urgent_person, e.e_urgent_phone, e.p_id, e.e_base_pay, e.e_isdel, e.e_entry_time, e.e_leave_time,
+--             d.d_id, d.d_name, d.d_remark, d.d_isdel
+        from
+          monthly_attendance ma
+          left join employee e on e.e_id = ma.e_id
+          left join department d on d.d_id = e.d_id
+       <where>
+        <if test="e_account != ''">
+            and e_account like concat('%',#{e_account},'%')
+        </if>
+        <if test="d_id != 0">
+            and d.d_id = #{d_id}
+        </if>
+        <if test="attendance_time != ''">
+            and attendance_time like concat('%',#{attendance_time},'%')
+        </if>
+       </where>
+        ORDER BY attendance_time DESC
+   </select>
+
+    <select id="selectVoByPrimaryKey" parameterType="int" resultMap="BaseResultMap" >
+        select *
+        from
+        monthly_attendance ma
+        left join employee e on e.e_id = ma.e_id
+        left join department d on d.d_id = e.e_id
+        where ma_id = #{id, jdbcType=INTEGER}
+    </select>
+
+</mapper>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.esms.dao.SystemManagerMapper">
+  <resultMap id="BaseResultMap" type="com.esms.po.SystemManager">
+    <id column="sm_id" jdbcType="INTEGER" property="smId" />
+    <result column="sm_account" jdbcType="VARCHAR" property="smAccount" />
+    <result column="sm_password" jdbcType="VARCHAR" property="smPassword" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    sm_id, sm_account, sm_password
+  </sql>
+
+  <select id="selectByAccountAndPassword" parameterType="com.esms.po.SystemManager" resultType="com.esms.po.SystemManager">
+    select * from system_manager where sm_account = #{smAccount} and sm_password = #{smPassword}
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from system_manager
+    where sm_id = #{smId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from system_manager
+    where sm_id = #{smId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.esms.po.SystemManager">
+    <selectKey keyProperty="smId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into system_manager (sm_account, sm_password)
+    values (#{smAccount,jdbcType=VARCHAR}, #{smPassword,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.esms.po.SystemManager">
+    <selectKey keyProperty="smId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into system_manager
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="smAccount != null">
+        sm_account,
+      </if>
+      <if test="smPassword != null">
+        sm_password,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="smAccount != null">
+        #{smAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="smPassword != null">
+        #{smPassword,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.esms.po.SystemManager">
+    update system_manager
+    <set>
+      <if test="smAccount != null">
+        sm_account = #{smAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="smPassword != null">
+        sm_password = #{smPassword,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where sm_id = #{smId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.esms.po.SystemManager">
+    update system_manager
+    set sm_account = #{smAccount,jdbcType=VARCHAR},
+      sm_password = #{smPassword,jdbcType=VARCHAR}
+    where sm_id = #{smId,jdbcType=INTEGER}
+  </update>
+</mapper>

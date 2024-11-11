@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ESMS</title>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/ssm_esms/static/css/font.css">
+    <link rel="stylesheet" href="/ssm_esms/static/css/xadmin.css">
+    <link rel="stylesheet" href="/ssm_esms/static/lib/layui/css/layui.css">
+
+</head>
+<body>
+<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a>首页</a>
+        <a>个人信息</a>
+        <a>
+          <cite>信息详情</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+       href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+<br>
+<table class="">
+    <tbody>
+    <tr>
+        <td>
+            <label class="layui-form-label">工号</label>
+        </td>
+        <td>
+            <div class="layui-input-inline">
+                <input type="text" id="eAccount" class="layui-input" disabled value=""/>
+            </div>
+        </td>
+        <td>
+            <label class="layui-form-label">姓名</label>
+        </td>
+        <td>
+            <div class="layui-input-inline">
+                <input type="text" id="eName" class="layui-input" disabled value=""/>
+            </div>
+        </td>
+        <td>
+            <label class="layui-form-label">身份证号码</label>
+        </td>
+        <td>
+            <div class="layui-input-inline">
+                <input type="text" id="eIdcard" class="layui-input" disabled value=""/>
+            </div>
+        </td>
+        <td width="60px;">&nbsp;</td>
+        <td rowspan="6">
+            <img src="" id="eHeadPath" height="150" width="110"/>
+        </td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td>
+            <label class="layui-form-label">性别</label>
+        </td>
+        <td>
+            <div class="layui-input-inline">
+                <input type="text" id="eSex" class="layui-input" disabled value=""/>
+            </div>
+        </td>
+        <td>
+            <label class="layui-form-label">生日</label>
+        </td>
+        <td>
+            <div class="layui-input-inline">
+                <input type="text" id="eBirthday" class="layui-input" disabled value=""/>
+            </div>
+        </td>
+        <td>
+            <label class="layui-form-label">学历</label>
+        </td>
+        <td>
+            <div class="layui-input-inline">
+                <input type="text" id="eDagree" class="layui-input" disabled value=""/>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td>
+            <a href="javascript:;" onclick="getDepartment();"><label class="layui-form-label">部门</label></a>
+        </td>
+        <td>
+            <div class="layui-input-inline">
+                <input type="text" id="dName" class="layui-input" disabled value=""/>
+            </div>
+        </td>
+        <td>
+            <a href="javascript:;" onclick="getPosition();"><label class="layui-form-label">岗位</label></a>
+        </td>
+        <td>
+            <div class="layui-input-inline">
+                <input type="text" id="pName" class="layui-input" disabled value=""/>
+            </div>
+        </td>
+        <td>
+            <label class="layui-form-label">职称</label>
+        </td>
+        <td>
+            <div class="layui-input-inline">
+                <input type="text" id="rankName" class="layui-input" disabled value=""/>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td>
+            <label class="layui-form-label">入职时间</label>
+        </td>
+        <td>
+            <div class="layui-input-inline">
+                <input type="text" id="eEntryTime" class="layui-input" disabled value=""/>
+            </div>
+        </td>
+        <td>
+            <label class="layui-form-label">基本工资</label>
+        </td>
+        <td>
+            <div class="layui-input-inline">
+                <input type="text" id="eBasePay" class="layui-input" disabled value=""/>
+            </div>
+        </td>
+        <td>
+            <label class="layui-form-label"></label>
+        </td>
+        <td>
+            <label class="layui-form-label"></label>
+        </td>
+        <!--<td width="60px;">&nbsp;</td>-->
+        <!--<td rowspan="2">-->
+            <!--<button type="button" class="layui-btn" id="headPhoto" style="width: 110px">-->
+                <!--<i class="layui-icon">&#xe67c;</i>修改头像-->
+            <!--</button>-->
+        <!--</td>-->
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+    </tr>
+    </tbody>
+</table>
+<hr>
+<hr>
+<span style="font-size: 20px">&nbsp;&nbsp;联系方式：</span>
+<form class="layui-form" action="">
+    <div class="layui-form-item" style="">
+        <!--<input type="hidden" id="eId" value=""/>-->
+        <label class="layui-form-label">手机号码</label>
+        <div class="layui-input-inline">
+            <input type="tel" id="ePhone" name="phone" required lay-verify="required|phone"
+                   autocomplete="off"
+                   class="layui-input" value=""/>
+        </div>
+        <label class="layui-form-label" style="width: 180px">邮箱地址</label>
+        <div class="layui-input-inline">
+            <input type="email" id="eEmail" required lay-verify="required|email" autocomplete="off"
+                   class="layui-input"
+                   style="width: 200px" value=""/>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">紧急联系人</label>
+        <div class="layui-input-inline">
+            <input type="text" id="eUrgentPerson" required lay-verify="required" autocomplete="off"
+                   class="layui-input" value=""/>
+        </div>
+        <label class="layui-form-label" style="width: 180px">紧急联系人电话</label>
+        <div class="layui-input-inline">
+            <input type="tel" id="eUrgentPhone" lay-verify="required|phone" autocomplete="off"
+                   class="layui-input" style="width: 200px" value=""/>
+        </div>
+        <div class="layui-input-inline" style="margin-left:100px ">
+            <button class="layui-btn layui-btn-radius" lay-submit lay-filter="saveInfor"
+                    style="width: 110px">保存修改
+            </button>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">家庭住址</label>
+        <div class="layui-input-inline">
+            <input type="text" name="text" id="eHometown" required lay-verify="required" autocomplete="off"
+                   class="layui-input" style="width: 610px" value=""/>
+        </div>
+    </div>
+</form>
+
+
+</body>
+<script type="text/javascript" src="/ssm_esms/static/js/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="/ssm_esms/static/lib/layui/layui.js"></script>
+<script type="text/javascript" src="/ssm_esms/static/js/xadmin.js"></script>
+<script>
+    var dRemark = null;
+    var pDuty = null;
+    window.onload = function () {
+        $.ajax({
+            url: "inforEmployee.do",
+            type: "get",
+            dataType: "json",
+            success: function (data) {
+                var employee = data.employee;
+                var rankBonus = data.rankBonus;
+                var position = data.position;
+                var department = data.department;
+                $("#eBasePay").val(employee.eBasePay);
+                $("#eAccount").val(employee.eAccount);
+                $("#eEmail").val(employee.eEmail);
+                $("#eEntryTime").val(employee.eEntryTime)
+                $("#eBirthday").val(employee.eBirthday)
+                $("#eHometown").val(employee.eHometown)
+                $("#eDagree").val(employee.eDagree)
+                $("#eIdcard").val(employee.eIdcard)
+                $("#eName").val(employee.eName)
+                $("#ePhone").val(employee.ePhone)
+                $("#dName").val(department.dName)
+                $("#pName").val(position.pName)
+                $("#rankName").val(rankBonus.rankName)
+                $("#eSex").val(employee.eSex)
+                $("#eUrgentPerson").val(employee.eUrgentPerson)
+                $("#eUrgentPhone").val(employee.eUrgentPhone)
+                $("#eHeadPath").attr('src',employee.eHeadPath)
+                dRemark = department.dRemark;
+                pDuty = position.pDuty;
+            },
+        })
+    }
+
+    function getPosition() {
+        //页面层
+        layer.open({
+            title: ['岗位描述',
+                'background:#EFEFEF; color:#000;'],
+            type: 1,
+            // skin: 'layui-layer-rim', //加上边框
+            area: ['420px', '240px'], //宽高
+            content: dRemark
+        });
+    }
+
+    function getDepartment() {
+        //页面层
+        layer.open({
+            title: ['部门介绍',
+                'background:#EFEFEF; color:#000;'],
+            type: 1,
+            // skin: 'layui-layer-rim', //加上边框
+            area: ['420px', '240px'], //宽高
+            content: pDuty
+        });
+    }
+
+    // 预先加载
+    layui.use('form', function () {
+        // 注册变量
+        var form = layui.form;
+
+        //监听提交form里面的submit标签
+        form.on('submit(saveInfor)', function (data) {
+            $.ajax({
+                url: "updateInforEmployee.do",
+                data: {
+                    "eEmail":$("#eEmail").val(),
+                    "eUrgentPerson": $("#eUrgentPerson").val(),
+                    "eUrgentPhone": $("#eUrgentPhone").val(),
+                    // "eId": $("#eId").val()
+                    "eHometown": $("#eHometown").val(),
+                    "ePhone": $("#ePhone").val()
+                },
+                type: "post",
+                dataType: "json",
+                success: function (data) {
+                    if (data == 1) {
+                        layer.alert("个人信息保存成功", {title: "操作提示"})
+                    } else {
+                        layer.alert("个人信息保存失败", {title: "操作提示"})
+                    }
+                },
+            })
+            return false;
+        });
+    });
+
+
+    // 上传图片
+    // layui.use('upload', function () {
+    //     var upload = layui.upload;
+    //     //执行实例
+    //     var uploadInst = upload.render({
+    //         elem: '#headPhoto' //绑定元素
+    //         , url: 'uploadPhoto.do' //上传接口
+    //         , done: function (res) {
+    //             //上传完毕回调
+    //             $('#headP').attr('src', res.data.src);
+    //         }
+    //         , error: function () {
+    //             //请求异常回调
+    //         }
+    //     });
+    // });
+</script>
+</html>

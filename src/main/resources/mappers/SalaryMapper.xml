@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.esms.dao.SalaryMapper">
+  <resultMap id="BaseResultMap" type="com.esms.po.Salary">
+    <id column="s_id" jdbcType="INTEGER" property="sId" />
+    <result column="e_id" jdbcType="INTEGER" property="eId" />
+    <result column="d_id" jdbcType="INTEGER" property="dId" />
+    <result column="s_time" jdbcType="DATE" property="sTime" />
+    <result column="s_state" jdbcType="INTEGER" property="sState" />
+    <result column="base_pay" jdbcType="DOUBLE" property="basePay" />
+    <result column="food_pay" jdbcType="DOUBLE" property="foodPay" />
+    <result column="post_pay" jdbcType="DOUBLE" property="postPay" />
+    <result column="working_year_pay" jdbcType="DOUBLE" property="workingYearPay" />
+    <result column="rank_pay" jdbcType="DOUBLE" property="rankPay" />
+    <result column="traffic_pay" jdbcType="DOUBLE" property="trafficPay" />
+    <result column="persion_pay" jdbcType="DOUBLE" property="persionPay" />
+    <result column="medical_pay" jdbcType="DOUBLE" property="medicalPay" />
+    <result column="unemployment_pay" jdbcType="DOUBLE" property="unemploymentPay" />
+    <result column="injury_pay" jdbcType="DOUBLE" property="injuryPay" />
+    <result column="birth_pay" jdbcType="DOUBLE" property="birthPay" />
+    <result column="housing_pay" jdbcType="DOUBLE" property="housingPay" />
+    <result column="late_pay" jdbcType="DOUBLE" property="latePay" />
+    <result column="early_pay" jdbcType="DOUBLE" property="earlyPay" />
+    <result column="overtime_pay" jdbcType="DOUBLE" property="overtimePay" />
+    <result column="sick_pay" jdbcType="DOUBLE" property="sickPay" />
+    <result column="thing_pay" jdbcType="DOUBLE" property="thingPay" />
+    <result column="business_travel_pay" jdbcType="DOUBLE" property="businessTravelPay" />
+    <result column="full_attendance_pay" jdbcType="DOUBLE" property="fullAttendancePay" />
+    <result column="rissue_pay" jdbcType="DOUBLE" property="rissuePay" />
+    <result column="individual_income_tax" jdbcType="DOUBLE" property="individualIncomeTax" />
+    <result column="should_pay" jdbcType="DOUBLE" property="shouldPay" />
+    <result column="actual_pay" jdbcType="DOUBLE" property="actualPay" />
+    <association property="employee" javaType="com.esms.po.Employee"
+                 select="com.esms.dao.EmployeeMapper.selectByPrimaryKey" column="e_id">
+    </association>
+    <association property="department" javaType="com.esms.po.Department"
+                 select="com.esms.dao.DepartmentMapper.selectByPrimaryKey" column="d_id">
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List">
+    s_id, e_id, d_id, s_time, s_state, base_pay, food_pay, post_pay, working_year_pay, 
+    rank_pay, traffic_pay, persion_pay, medical_pay, unemployment_pay, injury_pay, birth_pay, 
+    housing_pay, late_pay, early_pay, overtime_pay, sick_pay, thing_pay, business_travel_pay, 
+    full_attendance_pay, rissue_pay, individual_income_tax, should_pay, actual_pay
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from salary
+    where s_id = #{sId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from salary
+    where s_id = #{sId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.esms.po.Salary">
+    <selectKey keyProperty="sId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into salary (e_id, d_id, s_time,
+    s_state, base_pay, food_pay,
+    post_pay, working_year_pay, rank_pay,
+    traffic_pay, persion_pay, medical_pay,
+    unemployment_pay, injury_pay, birth_pay,
+    housing_pay, late_pay, early_pay,
+    overtime_pay, sick_pay, thing_pay,
+    business_travel_pay, full_attendance_pay, rissue_pay,
+    individual_income_tax, should_pay, actual_pay
+    )
+    values (#{employee.eId,jdbcType=INTEGER}, #{department.dId,jdbcType=INTEGER}, #{sTime,jdbcType=DATE},
+    #{sState,jdbcType=INTEGER}, #{basePay,jdbcType=DOUBLE}, #{foodPay,jdbcType=DOUBLE},
+    #{postPay,jdbcType=DOUBLE}, #{workingYearPay,jdbcType=DOUBLE}, #{rankPay,jdbcType=DOUBLE},
+    #{trafficPay,jdbcType=DOUBLE}, #{persionPay,jdbcType=DOUBLE}, #{medicalPay,jdbcType=DOUBLE},
+    #{unemploymentPay,jdbcType=DOUBLE}, #{injuryPay,jdbcType=DOUBLE}, #{birthPay,jdbcType=DOUBLE},
+    #{housingPay,jdbcType=DOUBLE}, #{latePay,jdbcType=DOUBLE}, #{earlyPay,jdbcType=DOUBLE},
+    #{overtimePay,jdbcType=DOUBLE}, #{sickPay,jdbcType=DOUBLE}, #{thingPay,jdbcType=DOUBLE},
+    #{businessTravelPay,jdbcType=DOUBLE}, #{fullAttendancePay,jdbcType=DOUBLE}, #{rissuePay,jdbcType=DOUBLE},
+    #{individualIncomeTax,jdbcType=DOUBLE}, #{shouldPay,jdbcType=DOUBLE}, #{actualPay,jdbcType=DOUBLE}
+    )
+  </insert>
+  <insert id="insertSelective" parameterType="com.esms.po.Salary">
+    <selectKey keyProperty="sId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into salary
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="employee != null">
+        e_id,
+      </if>
+      <if test="department != null">
+        d_id,
+      </if>
+      <if test="sTime != null">
+        s_time,
+      </if>
+      <if test="sState != null">
+        s_state,
+      </if>
+      <if test="basePay != null">
+        base_pay,
+      </if>
+      <if test="foodPay != null">
+        food_pay,
+      </if>
+      <if test="postPay != null">
+        post_pay,
+      </if>
+      <if test="workingYearPay != null">
+        working_year_pay,
+      </if>
+      <if test="rankPay != null">
+        rank_pay,
+      </if>
+      <if test="trafficPay != null">
+        traffic_pay,
+      </if>
+      <if test="persionPay != null">
+        persion_pay,
+      </if>
+      <if test="medicalPay != null">
+        medical_pay,
+      </if>
+      <if test="unemploymentPay != null">
+        unemployment_pay,
+      </if>
+      <if test="injuryPay != null">
+        injury_pay,
+      </if>
+      <if test="birthPay != null">
+        birth_pay,
+      </if>
+      <if test="housingPay != null">
+        housing_pay,
+      </if>
+      <if test="latePay != null">
+        late_pay,
+      </if>
+      <if test="earlyPay != null">
+        early_pay,
+      </if>
+      <if test="overtimePay != null">
+        overtime_pay,
+      </if>
+      <if test="sickPay != null">
+        sick_pay,
+      </if>
+      <if test="thingPay != null">
+        thing_pay,
+      </if>
+      <if test="businessTravelPay != null">
+        business_travel_pay,
+      </if>
+      <if test="fullAttendancePay != null">
+        full_attendance_pay,
+      </if>
+      <if test="rissuePay != null">
+        rissue_pay,
+      </if>
+      <if test="individualIncomeTax != null">
+        individual_income_tax,
+      </if>
+      <if test="shouldPay != null">
+        should_pay,
+      </if>
+      <if test="actualPay != null">
+        actual_pay,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="employee != null">
+        #{employee.eId,jdbcType=INTEGER},
+      </if>
+      <if test="department != null">
+        #{department.dId,jdbcType=INTEGER},
+      </if>
+      <if test="sTime != null">
+        #{sTime,jdbcType=DATE},
+      </if>
+      <if test="sState != null">
+        #{sState,jdbcType=INTEGER},
+      </if>
+      <if test="basePay != null">
+        #{basePay,jdbcType=DOUBLE},
+      </if>
+      <if test="foodPay != null">
+        #{foodPay,jdbcType=DOUBLE},
+      </if>
+      <if test="postPay != null">
+        #{postPay,jdbcType=DOUBLE},
+      </if>
+      <if test="workingYearPay != null">
+        #{workingYearPay,jdbcType=DOUBLE},
+      </if>
+      <if test="rankPay != null">
+        #{rankPay,jdbcType=DOUBLE},
+      </if>
+      <if test="trafficPay != null">
+        #{trafficPay,jdbcType=DOUBLE},
+      </if>
+      <if test="persionPay != null">
+        #{persionPay,jdbcType=DOUBLE},
+      </if>
+      <if test="medicalPay != null">
+        #{medicalPay,jdbcType=DOUBLE},
+      </if>
+      <if test="unemploymentPay != null">
+        #{unemploymentPay,jdbcType=DOUBLE},
+      </if>
+      <if test="injuryPay != null">
+        #{injuryPay,jdbcType=DOUBLE},
+      </if>
+      <if test="birthPay != null">
+        #{birthPay,jdbcType=DOUBLE},
+      </if>
+      <if test="housingPay != null">
+        #{housingPay,jdbcType=DOUBLE},
+      </if>
+      <if test="latePay != null">
+        #{latePay,jdbcType=DOUBLE},
+      </if>
+      <if test="earlyPay != null">
+        #{earlyPay,jdbcType=DOUBLE},
+      </if>
+      <if test="overtimePay != null">
+        #{overtimePay,jdbcType=DOUBLE},
+      </if>
+      <if test="sickPay != null">
+        #{sickPay,jdbcType=DOUBLE},
+      </if>
+      <if test="thingPay != null">
+        #{thingPay,jdbcType=DOUBLE},
+      </if>
+      <if test="businessTravelPay != null">
+        #{businessTravelPay,jdbcType=DOUBLE},
+      </if>
+      <if test="fullAttendancePay != null">
+        #{fullAttendancePay,jdbcType=DOUBLE},
+      </if>
+      <if test="rissuePay != null">
+        #{rissuePay,jdbcType=DOUBLE},
+      </if>
+      <if test="individualIncomeTax != null">
+        #{individualIncomeTax,jdbcType=DOUBLE},
+      </if>
+      <if test="shouldPay != null">
+        #{shouldPay,jdbcType=DOUBLE},
+      </if>
+      <if test="actualPay != null">
+        #{actualPay,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.esms.po.Salary">
+    update salary
+    <set>
+      <if test="employee != null">
+        e_id = #{employee.eId,jdbcType=INTEGER},
+      </if>
+      <if test="department != null">
+        d_id = #{department.dId,jdbcType=INTEGER},
+      </if>
+      <if test="sTime != null">
+        s_time = #{sTime,jdbcType=DATE},
+      </if>
+      <if test="sState != null">
+        s_state = #{sState,jdbcType=INTEGER},
+      </if>
+      <if test="basePay != null">
+        base_pay = #{basePay,jdbcType=DOUBLE},
+      </if>
+      <if test="foodPay != null">
+        food_pay = #{foodPay,jdbcType=DOUBLE},
+      </if>
+      <if test="postPay != null">
+        post_pay = #{postPay,jdbcType=DOUBLE},
+      </if>
+      <if test="workingYearPay != null">
+        working_year_pay = #{workingYearPay,jdbcType=DOUBLE},
+      </if>
+      <if test="rankPay != null">
+        rank_pay = #{rankPay,jdbcType=DOUBLE},
+      </if>
+      <if test="trafficPay != null">
+        traffic_pay = #{trafficPay,jdbcType=DOUBLE},
+      </if>
+      <if test="persionPay != null">
+        persion_pay = #{persionPay,jdbcType=DOUBLE},
+      </if>
+      <if test="medicalPay != null">
+        medical_pay = #{medicalPay,jdbcType=DOUBLE},
+      </if>
+      <if test="unemploymentPay != null">
+        unemployment_pay = #{unemploymentPay,jdbcType=DOUBLE},
+      </if>
+      <if test="injuryPay != null">
+        injury_pay = #{injuryPay,jdbcType=DOUBLE},
+      </if>
+      <if test="birthPay != null">
+        birth_pay = #{birthPay,jdbcType=DOUBLE},
+      </if>
+      <if test="housingPay != null">
+        housing_pay = #{housingPay,jdbcType=DOUBLE},
+      </if>
+      <if test="latePay != null">
+        late_pay = #{latePay,jdbcType=DOUBLE},
+      </if>
+      <if test="earlyPay != null">
+        early_pay = #{earlyPay,jdbcType=DOUBLE},
+      </if>
+      <if test="overtimePay != null">
+        overtime_pay = #{overtimePay,jdbcType=DOUBLE},
+      </if>
+      <if test="sickPay != null">
+        sick_pay = #{sickPay,jdbcType=DOUBLE},
+      </if>
+      <if test="thingPay != null">
+        thing_pay = #{thingPay,jdbcType=DOUBLE},
+      </if>
+      <if test="businessTravelPay != null">
+        business_travel_pay = #{businessTravelPay,jdbcType=DOUBLE},
+      </if>
+      <if test="fullAttendancePay != null">
+        full_attendance_pay = #{fullAttendancePay,jdbcType=DOUBLE},
+      </if>
+      <if test="rissuePay != null">
+        rissue_pay = #{rissuePay,jdbcType=DOUBLE},
+      </if>
+      <if test="individualIncomeTax != null">
+        individual_income_tax = #{individualIncomeTax,jdbcType=DOUBLE},
+      </if>
+      <if test="shouldPay != null">
+        should_pay = #{shouldPay,jdbcType=DOUBLE},
+      </if>
+      <if test="actualPay != null">
+        actual_pay = #{actualPay,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where s_id = #{sId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.esms.po.Salary">
+    update salary
+    set e_id = #{employee.eId,jdbcType=INTEGER},
+      d_id = #{department.dId,jdbcType=INTEGER},
+      s_time = #{sTime,jdbcType=DATE},
+      s_state = #{sState,jdbcType=INTEGER},
+      base_pay = #{basePay,jdbcType=DOUBLE},
+      food_pay = #{foodPay,jdbcType=DOUBLE},
+      post_pay = #{postPay,jdbcType=DOUBLE},
+      working_year_pay = #{workingYearPay,jdbcType=DOUBLE},
+      rank_pay = #{rankPay,jdbcType=DOUBLE},
+      traffic_pay = #{trafficPay,jdbcType=DOUBLE},
+      persion_pay = #{persionPay,jdbcType=DOUBLE},
+      medical_pay = #{medicalPay,jdbcType=DOUBLE},
+      unemployment_pay = #{unemploymentPay,jdbcType=DOUBLE},
+      injury_pay = #{injuryPay,jdbcType=DOUBLE},
+      birth_pay = #{birthPay,jdbcType=DOUBLE},
+      housing_pay = #{housingPay,jdbcType=DOUBLE},
+      late_pay = #{latePay,jdbcType=DOUBLE},
+      early_pay = #{earlyPay,jdbcType=DOUBLE},
+      overtime_pay = #{overtimePay,jdbcType=DOUBLE},
+      sick_pay = #{sickPay,jdbcType=DOUBLE},
+      thing_pay = #{thingPay,jdbcType=DOUBLE},
+      business_travel_pay = #{businessTravelPay,jdbcType=DOUBLE},
+      full_attendance_pay = #{fullAttendancePay,jdbcType=DOUBLE},
+      rissue_pay = #{rissuePay,jdbcType=DOUBLE},
+      individual_income_tax = #{individualIncomeTax,jdbcType=DOUBLE},
+      should_pay = #{shouldPay,jdbcType=DOUBLE},
+      actual_pay = #{actualPay,jdbcType=DOUBLE}
+    where s_id = #{sId,jdbcType=INTEGER}
+  </update>
+<!--根据员工编号和时间查找工资记录 by方宏泰-->
+  <select id="selectByEidAndTime" resultMap="BaseResultMap">
+    SELECT *
+    from salary
+    where e_id = #{arg0,jdbcType=INTEGER} and
+    s_time = #{arg1,jdbcType=VARCHAR}
+  </select>
+  <!--根据部门编号和时间查最低工资，平均工资，最高工资 by方宏泰-->
+  <select id="selectSalaryByDepartment" resultType="com.esms.vo.EchSalary">
+    SELECT MIN(actual_pay) as minSalary,AVG(actual_pay) as avgSalary,MAX(actual_pay) as maxSalary
+    from salary
+    where d_id=#{arg0} and strcmp(date_format(s_time,'%Y-%m'),#{arg1}) = 0
+  </select>
+  <!--根据部门编号和年月时间查工资总数 by方宏泰-->
+  <select id="selectAllSalaryByDepartment" resultType="java.lang.Double">
+    SELECT SUM(actual_pay)
+    from salary
+    where d_id=#{arg0} and strcmp(date_format(s_time,'%Y-%m'),#{arg1}) = 0
+  </select>
+
+  <!--根据部门编号和年时间查工资总数 by方宏泰-->
+  <select id="selectAllSalaryByDepAndYear" resultType="java.lang.Double">
+    SELECT SUM(actual_pay)
+    from salary
+    where d_id=#{arg0} and strcmp(date_format(s_time,'%Y'),#{arg1}) = 0
+  </select>
+  <!--根据年月时间查工资总数 by方宏泰-->
+  <select id="selectAllSalaryByDate" resultType="java.lang.Double">
+    SELECT SUM(actual_pay)
+    from salary
+    where strcmp(date_format(s_time,'%Y-%m'),#{date}) = 0
+  </select>
+    <!--多条件查询（员工工号，部门ID，时间年月）by方宏泰-->
+  <!--and e.e_account =#{eAccount}-->
+    <select id="selectByEaccountDIdDate" parameterType="map" resultMap="BaseResultMap">
+        select
+        s_id, s.e_id , s.d_id , s_time, s_state, base_pay, food_pay, post_pay, working_year_pay,
+        rank_pay, traffic_pay, persion_pay, medical_pay, unemployment_pay, injury_pay, birth_pay,
+        housing_pay, late_pay, early_pay, overtime_pay, sick_pay, thing_pay, business_travel_pay,
+        full_attendance_pay, rissue_pay, individual_income_tax, should_pay, actual_pay
+        from employee e,department d,salary s
+        <where>
+            e.e_id = s.e_id and d.d_id = s.d_id
+            <if test="eAccount!=null and eAccount!=''">
+                and e.e_account like concat('%',#{eAccount},'%')
+            </if>
+            <if test="dId!=null">
+                and d.d_id = #{dId}
+            </if>
+            <if test="sTime!=null and sTime!=''">
+                and strcmp(date_format(s_time,'%Y-%m'),#{sTime}) = 0
+            </if>
+        </where>
+        ORDER BY s_time DESC
+    </select>
+  <!--根据员工id和年时间查工资总记录 byadmin-->
+  <select id="selectEmployeeSalaryList" resultType="com.esms.po.Salary">
+    SELECT *
+    from salary
+    where e_id=#{arg0} and strcmp(date_format(s_time,'%Y'),#{arg1}) = 0 ORDER BY s_time DESC
+  </select>
+
+  <select id="selectByeId" parameterType="java.lang.Integer" resultType="com.esms.po.Salary">
+    select *
+    from salary
+    where e_id = #{eId,jdbcType=INTEGER} ORDER BY s_time DESC
+  </select>
+
+  <!--// 通过date 和 转态为 1-->
+  <select id="selectByeTimeAndStatus" resultType="com.esms.po.Salary">
+    select *
+    from salary
+    where strcmp(date_format(s_time,'%Y-%m'),#{arg0}) = 0 and s_state = #{arg1}
+  </select>
+
+    <!--// 通过date 和 eid 和转态为 1-->
+    <select id="selectByEidAndTimeAndStatus" resultType="com.esms.po.Salary">
+    select *
+    from salary
+    where e_id=#{arg0} and strcmp(date_format(s_time,'%Y-%m'),#{arg1}) = 0 and s_state = #{arg2}
+  </select>
+
+  <!--多条件查询（员工工号，部门ID，时间年月，转态）byadmin-->
+  <select id="selectByEaccountDIdDateState" parameterType="map" resultMap="BaseResultMap">
+    select
+    s_id, s.e_id , s.d_id , s_time, s_state, base_pay, food_pay, post_pay, working_year_pay,
+    rank_pay, traffic_pay, persion_pay, medical_pay, unemployment_pay, injury_pay, birth_pay,
+    housing_pay, late_pay, early_pay, overtime_pay, sick_pay, thing_pay, business_travel_pay,
+    full_attendance_pay, rissue_pay, individual_income_tax, should_pay, actual_pay
+    from employee e,department d,salary s
+    <where>
+      e.e_id = s.e_id and d.d_id = s.d_id
+      <if test="eAccount!=null and eAccount!=''">
+        and e.e_account like concat('%',#{eAccount},'%')
+      </if>
+      <if test="dId!=null">
+        and d.d_id = #{dId}
+      </if>
+      <if test="sTime!=null and sTime!=''">
+        and strcmp(date_format(s_time,'%Y-%m'),#{sTime}) = 0
+      </if>
+      and s_state = 0
+    </where>
+      ORDER BY s_time DESC
+  </select>
+</mapper>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.esms.dao.EmployeeCustomVoMapper">
+    <resultMap id="BaseResultMap" type="com.esms.vo.EmployeeCustomVo">
+        <result column="e_id" jdbcType="INTEGER" property="employee.eId"/>
+        <result column="e_account" jdbcType="VARCHAR" property="employee.eAccount"/>
+        <result column="e_password" jdbcType="VARCHAR" property="employee.ePassword"/>
+        <result column="e_name" jdbcType="VARCHAR" property="employee.eName"/>
+        <result column="e_idcard" jdbcType="VARCHAR" property="employee.eIdcard"/>
+        <result column="e_sex" jdbcType="VARCHAR" property="employee.eSex"/>
+        <result column="e_dagree" jdbcType="VARCHAR" property="employee.eDagree"/>
+        <result column="e_birthday" jdbcType="DATE" property="employee.eBirthday"/>
+        <result column="e_email" jdbcType="VARCHAR" property="employee.eEmail"/>
+        <result column="e_phone" jdbcType="VARCHAR" property="employee.ePhone"/>
+        <result column="e_hometown" jdbcType="VARCHAR" property="employee.eHometown"/>
+        <result column="e_rank" jdbcType="INTEGER" property="employee.eRank"/>
+        <result column="e_head_path" jdbcType="VARCHAR" property="employee.eHeadPath"/>
+        <result column="e_urgent_person" jdbcType="VARCHAR" property="employee.eUrgentPerson"/>
+        <result column="e_urgent_phone" jdbcType="VARCHAR" property="employee.eUrgentPhone"/>
+        <result column="p_id" jdbcType="INTEGER" property="employee.pId"/>
+        <result column="d_id" jdbcType="INTEGER" property="employee.dId"/>
+        <result column="e_base_pay" jdbcType="DOUBLE" property="employee.eBasePay"/>
+        <result column="e_isdel" jdbcType="INTEGER" property="employee.eIsdel"/>
+        <result column="e_entry_time" jdbcType="DATE" property="employee.eEntryTime"/>
+        <result column="e_leave_time" jdbcType="DATE" property="employee.eLeaveTime"/>
+
+        <result column="p_id" jdbcType="INTEGER" property="position.pId"/>
+        <result column="p_name" jdbcType="VARCHAR" property="position.pName"/>
+        <result column="p_duty" jdbcType="VARCHAR" property="position.pDuty"/>
+        <result column="p_post_pay" jdbcType="DOUBLE" property="position.pPostPay"/>
+        <result column="p_isdel" jdbcType="INTEGER" property="position.pIsdel"/>
+
+        <result column="rb_id" jdbcType="INTEGER" property="rankBonus.rbId"/>
+        <result column="rank_name" jdbcType="VARCHAR" property="rankBonus.rankName"/>
+        <result column="rb_bonus" jdbcType="INTEGER" property="rankBonus.rbBonus"/>
+
+        <result column="d_id" jdbcType="INTEGER" property="department.dId"/>
+        <result column="d_name" jdbcType="VARCHAR" property="department.dName"/>
+        <result column="d_remark" jdbcType="VARCHAR" property="department.dRemark"/>
+        <result column="d_isdel" jdbcType="INTEGER" property="department.dIsdel"/>
+    </resultMap>
+
+
+    <select id="selectEmployeeById" resultMap="BaseResultMap">
+    select * from employee e, department d,position p,rank_bonus rb
+    where e.e_id = #{arg0} and d.d_id = e.d_id and p.p_id = e.p_id and e_rank = rb_id
+  </select>
+
+
+    <!--条件查找 工号 员工姓名 部门id By xjx-->
+    <select id="selectEmployeeSelective" parameterType="map" resultMap="BaseResultMap" >
+        select *
+        from
+        employee e
+        left join department d on e.d_id = d.d_id
+        left join position p on e.p_id = p.p_id
+        left join rank_bonus rb on e.e_rank = rb.rb_id
+        <where>
+            <if test="e_account != ''">
+                and e_account like concat('%',#{e_account},'%')
+            </if>
+            <if test="e_name != ''">
+                and e_name like concat('%',#{e_name},'%')
+            </if>
+            <if test="d_id != 0">
+                and d.d_id = #{d_id}
+            </if>
+            <if test="true">
+                and e.e_isdel = 1
+            </if>
+        </where>
+        ORDER BY e.e_id DESC
+
+    </select>
+    <!-- 查找一个 By xjx-->
+    <select id="selectVoByPrimaryKey" parameterType="int" resultMap="BaseResultMap" >
+        select *
+        from
+        employee e
+        left join department d on e.d_id = d.d_id
+        left join position p on e.p_id = p.p_id
+        left join rank_bonus rb on e.e_rank = rb.rb_id
+        where e_id = #{id, jdbcType=INTEGER} and e_isdel = 1
+    </select>
+
+</mapper>

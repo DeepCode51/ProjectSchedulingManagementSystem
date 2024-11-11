@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.esms.dao.EmployeeMapper">
+  <resultMap id="BaseResultMap" type="com.esms.po.Employee">
+    <id column="e_id" jdbcType="INTEGER" property="eId" />
+    <result column="e_account" jdbcType="VARCHAR" property="eAccount" />
+    <result column="e_password" jdbcType="VARCHAR" property="ePassword" />
+    <result column="e_name" jdbcType="VARCHAR" property="eName" />
+    <result column="e_idcard" jdbcType="VARCHAR" property="eIdcard" />
+    <result column="e_sex" jdbcType="VARCHAR" property="eSex" />
+    <result column="e_dagree" jdbcType="VARCHAR" property="eDagree" />
+    <result column="e_birthday" jdbcType="DATE" property="eBirthday" />
+    <result column="e_email" jdbcType="VARCHAR" property="eEmail" />
+    <result column="e_phone" jdbcType="VARCHAR" property="ePhone" />
+    <result column="e_hometown" jdbcType="VARCHAR" property="eHometown" />
+    <result column="e_rank" jdbcType="INTEGER" property="eRank" />
+    <result column="e_head_path" jdbcType="VARCHAR" property="eHeadPath" />
+    <result column="e_urgent_person" jdbcType="VARCHAR" property="eUrgentPerson" />
+    <result column="e_urgent_phone" jdbcType="VARCHAR" property="eUrgentPhone" />
+    <result column="p_id" jdbcType="INTEGER" property="pId" />
+    <result column="d_id" jdbcType="INTEGER" property="dId" />
+    <result column="e_base_pay" jdbcType="DOUBLE" property="eBasePay" />
+    <result column="e_isdel" jdbcType="INTEGER" property="eIsdel" />
+    <result column="e_entry_time" jdbcType="DATE" property="eEntryTime" />
+    <result column="e_leave_time" jdbcType="DATE" property="eLeaveTime" />
+    <!--<association property="rankBonus" javaType="com.esms.po.RankBonus"-->
+                 <!--select="com.esms.dao.RankBonusMapper.selectByPrimaryKey" column="e_rank">-->
+    <!--</association>-->
+    <!--<association property="position" javaType="com.esms.po.Position"-->
+                 <!--select="com.esms.dao.PositionMapper.selectByPrimaryKey" column="p_id">-->
+    <!--</association>-->
+    <!--<association property="department" javaType="com.esms.po.Department"-->
+                 <!--select="com.esms.dao.DepartmentMapper.selectByPrimaryKey" column="d_id">-->
+    <!--</association>-->
+  </resultMap>
+  <sql id="Base_Column_List">
+    e_id, e_account, e_password, e_name, e_idcard, e_sex, e_dagree, e_birthday, e_email, 
+    e_phone, e_hometown, e_rank, e_head_path, e_urgent_person, e_urgent_phone, p_id, 
+    d_id, e_base_pay, e_isdel, e_entry_time, e_leave_time
+  </sql>
+
+  <!--删除与批量删除 添加 By xjx -->
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    update employee set e_isdel = 0 where e_id = #{eId,jdbcType=INTEGER}
+  </update>
+  <!--<update id="deleteByQuery" parameterType="java.util.ArrayList">-->
+    <!--update employee set e_isdel = 0 where e_id in-->
+    <!--<foreach  collection="array" item="id" separator="," open="(" close=")">-->
+      <!--#{id}-->
+    <!--</foreach>-->
+  <!--</update>-->
+  <select id="findByeAccount" parameterType="String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from employee where e_account =  #{eAccount,jdbcType=VARCHAR} and e_isdel = 1
+  </select>
+
+  <select id="selectByAccount" resultType="com.esms.po.Employee">
+    select * from employee where e_account = #{arg0} and e_isdel = 1
+  </select>
+
+  <select id="selectByAccountAndPassword" parameterType="com.esms.po.Employee" resultType="com.esms.po.Employee">
+    select * from employee where e_account = #{eAccount} and e_password = #{ePassword} and e_isdel = #{eIsdel}
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from employee
+    where e_id = #{eId,jdbcType=INTEGER}
+  </select>
+  <!--统计部门拥有员工数 by 方宏泰-->
+  <select id="countByDid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select count(*)
+    from employee
+    where d_id = #{dId}
+  </select>
+  <!--<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">-->
+    <!--delete from employee-->
+    <!--where e_id = #{eId,jdbcType=INTEGER}-->
+  <!--</delete>-->
+  <insert id="insert" parameterType="com.esms.po.Employee">
+    <selectKey keyProperty="eId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into employee (e_account, e_password, e_name, 
+      e_idcard, e_sex, e_dagree, 
+      e_birthday, e_email, e_phone, 
+      e_hometown, e_rank, e_head_path, 
+      e_urgent_person, e_urgent_phone, p_id, 
+      d_id, e_base_pay, e_isdel, 
+      e_entry_time, e_leave_time)
+    values (#{eAccount,jdbcType=VARCHAR}, #{ePassword,jdbcType=VARCHAR}, #{eName,jdbcType=VARCHAR}, 
+      #{eIdcard,jdbcType=VARCHAR}, #{eSex,jdbcType=VARCHAR}, #{eDagree,jdbcType=VARCHAR},
+      #{eBirthday,jdbcType=DATE}, #{eEmail,jdbcType=VARCHAR}, #{ePhone,jdbcType=VARCHAR}, 
+      #{eHometown,jdbcType=VARCHAR}, #{eRank,jdbcType=INTEGER}, #{eHeadPath,jdbcType=VARCHAR}, 
+      #{eUrgentPerson,jdbcType=VARCHAR}, #{eUrgentPhone,jdbcType=VARCHAR}, #{pId,jdbcType=INTEGER}, 
+      #{dId,jdbcType=INTEGER}, #{eBasePay,jdbcType=DOUBLE}, #{eIsdel,jdbcType=INTEGER}, 
+      #{eEntryTime,jdbcType=DATE}, #{eLeaveTime,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.esms.po.Employee">
+    <selectKey keyProperty="eId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into employee
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="eAccount != null">
+        e_account,
+      </if>
+      <if test="ePassword != null">
+        e_password,
+      </if>
+      <if test="eName != null">
+        e_name,
+      </if>
+      <if test="eIdcard != null">
+        e_idcard,
+      </if>
+      <if test="eSex != null">
+        e_sex,
+      </if>
+      <if test="eDagree != null">
+        e_dagree,
+      </if>
+      <if test="eBirthday != null">
+        e_birthday,
+      </if>
+      <if test="eEmail != null">
+        e_email,
+      </if>
+      <if test="ePhone != null">
+        e_phone,
+      </if>
+      <if test="eHometown != null">
+        e_hometown,
+      </if>
+      <if test="eRank != null">
+        e_rank,
+      </if>
+      <if test="eHeadPath != null">
+        e_head_path,
+      </if>
+      <if test="eUrgentPerson != null">
+        e_urgent_person,
+      </if>
+      <if test="eUrgentPhone != null">
+        e_urgent_phone,
+      </if>
+      <if test="pId != null">
+        p_id,
+      </if>
+      <if test="dId != null">
+        d_id,
+      </if>
+      <if test="eBasePay != null">
+        e_base_pay,
+      </if>
+      <if test="eIsdel != null">
+        e_isdel,
+      </if>
+      <if test="eEntryTime != null">
+        e_entry_time,
+      </if>
+      <if test="eLeaveTime != null">
+        e_leave_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="eAccount != null">
+        #{eAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="ePassword != null">
+        #{ePassword,jdbcType=VARCHAR},
+      </if>
+      <if test="eName != null">
+        #{eName,jdbcType=VARCHAR},
+      </if>
+      <if test="eIdcard != null">
+        #{eIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="eSex != null">
+        #{eSex,jdbcType=INTEGER},
+      </if>
+      <if test="eDagree != null">
+        #{eDagree,jdbcType=VARCHAR},
+      </if>
+      <if test="eBirthday != null">
+        #{eBirthday,jdbcType=DATE},
+      </if>
+      <if test="eEmail != null">
+        #{eEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="ePhone != null">
+        #{ePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="eHometown != null">
+        #{eHometown,jdbcType=VARCHAR},
+      </if>
+      <if test="eRank != null">
+        #{eRank,jdbcType=INTEGER},
+      </if>
+      <if test="eHeadPath != null">
+        #{eHeadPath,jdbcType=VARCHAR},
+      </if>
+      <if test="eUrgentPerson != null">
+        #{eUrgentPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="eUrgentPhone != null">
+        #{eUrgentPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="pId != null">
+        #{pId,jdbcType=INTEGER},
+      </if>
+      <if test="dId != null">
+        #{dId,jdbcType=INTEGER},
+      </if>
+      <if test="eBasePay != null">
+        #{eBasePay,jdbcType=DOUBLE},
+      </if>
+      <if test="eIsdel != null">
+        #{eIsdel,jdbcType=INTEGER},
+      </if>
+      <if test="eEntryTime != null">
+        #{eEntryTime,jdbcType=DATE},
+      </if>
+      <if test="eLeaveTime != null">
+        #{eLeaveTime,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.esms.po.Employee">
+    update employee
+    <set>
+      <if test="eAccount != null">
+        e_account = #{eAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="ePassword != null">
+        e_password = #{ePassword,jdbcType=VARCHAR},
+      </if>
+      <if test="eName != null">
+        e_name = #{eName,jdbcType=VARCHAR},
+      </if>
+      <if test="eIdcard != null">
+        e_idcard = #{eIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="eSex != null">
+        e_sex = #{eSex,jdbcType=VARCHAR},
+      </if>
+      <if test="eDagree != null">
+        e_dagree = #{eDagree,jdbcType=VARCHAR},
+      </if>
+      <if test="eBirthday != null">
+        e_birthday = #{eBirthday,jdbcType=DATE},
+      </if>
+      <if test="eEmail != null">
+        e_email = #{eEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="ePhone != null">
+        e_phone = #{ePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="eHometown != null">
+        e_hometown = #{eHometown,jdbcType=VARCHAR},
+      </if>
+      <if test="eRank != null">
+        e_rank = #{eRank,jdbcType=INTEGER},
+      </if>
+      <if test="eHeadPath != null">
+        e_head_path = #{eHeadPath,jdbcType=VARCHAR},
+      </if>
+      <if test="eUrgentPerson != null">
+        e_urgent_person = #{eUrgentPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="eUrgentPhone != null">
+        e_urgent_phone = #{eUrgentPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="pId != null">
+        p_id = #{pId,jdbcType=INTEGER},
+      </if>
+      <if test="dId != null">
+        d_id = #{dId,jdbcType=INTEGER},
+      </if>
+      <if test="eBasePay != null">
+        e_base_pay = #{eBasePay,jdbcType=DOUBLE},
+      </if>
+      <if test="eIsdel != null">
+        e_isdel = #{eIsdel,jdbcType=INTEGER},
+      </if>
+      <if test="eEntryTime != null">
+        e_entry_time = #{eEntryTime,jdbcType=DATE},
+      </if>
+      <if test="eLeaveTime != null">
+        e_leave_time = #{eLeaveTime,jdbcType=DATE},
+      </if>
+    </set>
+    where e_id = #{eId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.esms.po.Employee">
+    update employee
+    set e_account = #{eAccount,jdbcType=VARCHAR},
+      e_password = #{ePassword,jdbcType=VARCHAR},
+      e_name = #{eName,jdbcType=VARCHAR},
+      e_idcard = #{eIdcard,jdbcType=VARCHAR},
+      e_sex = #{eSex,jdbcType=VARCHAR},
+      e_dagree = #{eDagree,jdbcType=VARCHAR},
+      e_birthday = #{eBirthday,jdbcType=DATE},
+      e_email = #{eEmail,jdbcType=VARCHAR},
+      e_phone = #{ePhone,jdbcType=VARCHAR},
+      e_hometown = #{eHometown,jdbcType=VARCHAR},
+      e_rank = #{eRank,jdbcType=INTEGER},
+      e_head_path = #{eHeadPath,jdbcType=VARCHAR},
+      e_urgent_person = #{eUrgentPerson,jdbcType=VARCHAR},
+      e_urgent_phone = #{eUrgentPhone,jdbcType=VARCHAR},
+      p_id = #{pId,jdbcType=INTEGER},
+      d_id = #{dId,jdbcType=INTEGER},
+      e_base_pay = #{eBasePay,jdbcType=DOUBLE},
+      e_isdel = #{eIsdel,jdbcType=INTEGER},
+      e_entry_time = #{eEntryTime,jdbcType=DATE},
+      e_leave_time = #{eLeaveTime,jdbcType=DATE}
+    where e_id = #{eId,jdbcType=INTEGER}
+  </update>
+  <!--根据rank_bonus表的rb_id统计是否有员工依赖-->
+  <select id="countByRbid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select count(*)
+    from employee
+    where e_rank = #{eRank}
+  </select>
+
+  <!--根据rank_bonus表的rb_id统计是否有员工依赖-->
+  <select id="selectAll" resultType="com.esms.po.Employee">
+    select *
+    from employee
+    where e_isdel = 1
+  </select>
+<!--根据员工号检查是否存在此员工 by方宏泰-->
+  <select id="isExistEmployee" parameterType="java.lang.String" resultType="java.lang.Integer">
+    SELECT count(*)
+    from employee
+    where e_account = #{e_account}
+  </select>
+  <!--根据员工工号查找员工ID by方宏泰-->
+  <select id="selectEidByEaccount" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select e_id
+    from employee
+    where e_account = #{e_account}
+  </select>
+</mapper>

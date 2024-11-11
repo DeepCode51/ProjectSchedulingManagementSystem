@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>ESMS</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/ssm_esms/static/css/font.css">
+    <link rel="stylesheet" href="/ssm_esms/static/css/xadmin.css">
+    <script type="text/javascript" src="/ssm_esms/static/js/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="/ssm_esms/static/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="/ssm_esms/static/js/xadmin.js"></script>
+
+</head>
+
+<body class="layui-anim layui-anim-up">
+
+<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a>首页</a>
+        <a>工资管理</a>
+        <a>
+          <cite>工资发放</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+       href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+<div class="x-body" id="container">
+    <div class="layui-row">
+        <div class="demoTable layui-col-md10">
+            员工工号：
+            <div class="layui-inline">
+                <input class="layui-input" name="account" id="eAccount" autocomplete="off">
+            </div>
+            &nbsp&nbsp&nbsp
+            部门：
+            <div class="layui-inline">
+                <!--<input class="layui-input" name="id" id="dId" autocomplete="off">-->
+                <div class="layui-input-inline">
+                    <select name="dep" id="dId" lay-verify="required" lay-search="">
+                        <option value="">直接选择或搜索选择</option>
+                    </select>
+                </div>
+            </div>
+            &nbsp&nbsp&nbsp
+            月份：
+            <div class="layui-inline">
+                <input name="d" id="date" lay-verify="date" autocomplete="off" class="layui-input" type="text" readonly>
+            </div>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="layui-btn" data-type="reload">搜索</button>
+        </div>
+        <div class="layui-col-md2 demoTable">
+            <div class="layui-inline">
+                <button class="layui-btn" data-type="getCheckLengthIssue"
+                        style="margin-top: 6px;padding: 2px 10px 4px 10px">批量发放
+                </button>
+            </div>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <div class="layui-inline">
+                <button class="layui-btn layui-btn-danger" data-type="getCheckLength"
+                        style=" margin-top: 6px;padding: 2px 10px 4px 10px">批量删除
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+<!--<xblock>-->
+<!--<button class="layui-btn" onclick="x_admin_show('添加','toPage.do?url=admin/monthlyattendance-add.html',600,400)"><i class="layui-icon"></i>添加</button>-->
+<!--</xblock>-->
+
+
+<div style="text-align: center">
+    <table class="layui-table"
+           lay-data="{height: 'full-160', cellMinWidth:80, url:'selectSalaryByEaccountDIdDateState.do',even: true, page:true,initSort: {field: 'sTime', type: 'desc'}, id:'idTest'}"
+           lay-filter="demo">
+        <thead>
+        <tr>
+            <th lay-data="{type:'checkbox', fixed: 'left'}" , rowspan="2"></th>
+            <th lay-data="{field:'sTime',sort: true ,width:83, fixed: true,align: 'center'}" rowspan="2">月份</th>
+            <th lay-data="{field:'eName',fixed: true, templet: '<span>{{d.employee.eName}}</span>',minWidth:80,align: 'center'}"
+                rowspan="2">姓名
+            </th>
+            <th lay-data="{minWidth:100,align: 'center'}" colspan="2">员工信息</th>
+            <th lay-data="{field:'actualPay', width:86, align: 'center'}" rowspan="2">实发工资</th>
+            <th lay-data="{field:'shouldPay', width:86, align: 'center'}" rowspan="2">应发工资</th>
+            <th lay-data="{field:'basePay', width:86, align: 'center'}" rowspan="2">基本工资</th>
+            <th lay-data="{minWidth:100,align: 'center'}" colspan="4">补贴</th>
+            <th lay-data="{minWidth:100,align: 'center'}" colspan="4">奖金</th>
+            <th lay-data="{minWidth:100,align: 'center'}" colspan="6">五险一金</th>
+            <th lay-data="{minWidth:100,align: 'center'}" colspan="5">工资扣额</th>
+
+            <th lay-data="{field:'rissuePay', width:100, edit: 'text', fixed: 'right',align: 'center'}" rowspan="2">
+                其他工资
+            </th>
+            <th lay-data="{fixed: 'right', width:130, align:'center', toolbar: '#barDemo'}" rowspan="2"></th>
+
+            <!--<th lay-data="{fixed: 'right', width:130, align:'center', toolbar: '#barDemo'}" rowspan="2"></th>-->
+        </tr>
+        <tr>
+            <th lay-data="{field:'eAccount', templet: '<span>{{d.employee.eAccount}}</span>',minWidth:95,align: 'center'}"
+                rowspan="2">工号
+            </th>
+            <th lay-data="{field:'dName', templet: '<span>{{d.department.dName}}</span>',minWidth:80,align: 'center'}"
+                rowspan="2">部门
+            </th>
+            <th lay-data="{field:'foodPay', minWidth:60,align: 'center'}">餐饮</th>
+            <th lay-data="{field:'postPay', minWidth:60,align: 'center'}">岗位</th>
+            <th lay-data="{field:'trafficPay', minWidth:60,align: 'center'}">交通</th>
+            <th lay-data="{field:'businessTravelPay', minWidth:60,align: 'center'}">出差</th>
+
+            <th lay-data="{field:'workingYearPay', minWidth:60,align: 'center'}">工龄</th>
+            <th lay-data="{field:'rankPay', minWidth:60,align: 'center'}">职称</th>
+            <th lay-data="{field:'overtimePay', minWidth:70,align: 'center'}">加班</th>
+            <th lay-data="{field:'fullAttendancePay', minWidth:60,align: 'center'}">全勤</th>
+
+            <th lay-data="{field:'persionPay', minWidth:70,align: 'center'}">养老</th>
+            <th lay-data="{field:'medicalPay',  minWidth:70,align: 'center'}">医疗</th>
+            <th lay-data="{field:'unemploymentPay', minWidth:60,align: 'center'}">失业</th>
+            <th lay-data="{field:'injuryPay', minWidth:60,align: 'center'}">工伤</th>
+            <th lay-data="{field:'birthPay', minWidth:60,align: 'center'}">生育</th>
+            <th lay-data="{field:'housingPay', minWidth:100,align: 'center'}">住房公积金</th>
+
+            <th lay-data="{field:'latePay',  minWidth:60,align: 'center'}">迟到</th>
+            <th lay-data="{field:'earlyPay', minWidth:60,align: 'center'}">早退</th>
+            <th lay-data="{field:'sickPay', minWidth:60,align: 'center'}">病假</th>
+            <th lay-data="{field:'thingPay', minWidth:60,align: 'center'}">事假</th>
+            <th lay-data="{field:'individualIncomeTax', minWidth:100,align: 'center'}">个人所得税</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+
+</div>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="issue">发放</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script type="text/html" id="checkboxTpl">
+    <!-- 这里的 checked 的状态只是演示 -->
+    <input type="checkbox" disabled="" name="lock" value="{{d.sState}}" title="是" lay-filter="lockDemo" {{ d.sState== 1
+           ?'checked'
+    : '' }}>
+</script>
+<script>
+
+    window.onload = function () {
+        //加载部门下拉搜索框
+        var dId = $("#dId");
+        $.ajax({
+            url: 'department/findSelective.do?page=1&limit=999', //分页限制为999条，就是全部
+            dataType: 'json',
+            type: 'post',
+            success: function (result) {
+                // console.log(result);
+                $.each(result.data, function (index, item) {
+                    // console.log(index + "&" + item.dId);
+                    dId.append("<option value=" + item.dId + ">" + item.dName + "</option>");// 下拉菜单里添加元素
+                })
+            }
+        });
+    }
+
+    layui.use(['form', 'layedit', 'laydate', 'table'], function () {
+        var form = layui.form
+            , layer = layui.layer
+            , layedit = layui.layedit
+            , laydate = layui.laydate
+            , table = layui.table;
+
+        //年月范围
+        laydate.render({
+            elem: '#date'
+            , type: 'month'
+        });
+
+        //监听工具条
+        table.on('tool(demo)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'issue') {
+                var ids = [];
+                ids.push(data.sId);
+                console.log(ids)
+                layer.confirm('确定要发放吗', function (index) {
+                    $.ajax({
+                        type: 'post',
+                        url: 'issueSalaryByEid.do',
+                        data: {"arr": ids},
+                        traditional: true,
+                        dataType: 'json',
+                        success: function (data) {
+
+                        }
+                    });
+                    obj.del();
+                    layer.close(index);
+                });
+
+            } else if (obj.event === 'del') {
+                var ids = [];
+                ids.push(data.sId);
+                console.log(ids)
+                layer.confirm('确定要删除吗', function (index) {
+                    $.ajax({
+                        type: 'post',
+                        url: 'deleteSalaryByEid.do',
+                        data: {"arr": ids},
+                        traditional: true,
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data == 1) {
+                                layer.msg('已删除!', {icon: 1, time: 4000});
+                                // $(obj).parents("tr").remove();
+                                obj.del();
+
+                            }
+                            else {
+                                //alert("exist");
+                                layer.msg('删除失败!', {icon: 5, time: 1000});
+                            }
+                        },
+                        error: function (data) {
+                            // alert("error" + data);
+                            layer.alert("抱歉！出现未知错误！", {icon: 5});
+                        }
+                    });
+                });
+            }
+        })
+        //监听单元格编辑
+        table.on('edit(demo)', function (obj) {
+            var value = obj.value //得到修改后的值
+                , data = obj.data; //得到所在行所有键值
+            // layer.msg('[ID: ' + data.sId + '] ' + ' 字段更改为：' + value);
+
+            var number = new RegExp("(^[1-9]([0-9]+)?(\\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\\.[0-9]([0-9])?$)");
+            if (!number.test(value)) {
+                layer.msg("输入正确金额数，最多两位小数")
+            } else {
+                $.ajax({
+                    type: 'post',
+                    url: 'updateSalaryByEidAndRissuePay.do',
+                    data: {"rissuePay": value, "sId": data.sId},
+                    traditional: true,
+                    dataType: 'json',
+                    success: function (data) {
+
+                    }
+                });
+            }
+        });
+
+        var $ = layui.$, active = {
+            reload: function () {
+                var eAccount = $('#eAccount');
+                var dId = $('#dId');
+                var date = $('#date');
+                table.reload('idTest', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    , where: {
+                        eAccount: eAccount.val(),
+                        dId: dId.val(),
+                        sTime: date.val()
+                    }
+                });
+            },
+            getCheckLength: function () { //获取选中数目
+                var checkStatus = table.checkStatus('idTest')
+                    , data = checkStatus.data;
+                //遍历选中的选项中的id，放到数组中
+                var ids = [];
+                $.each(data, function (index, item) {
+                    ids.push(item.sId);
+                });
+                layer.confirm('确定要删除吗', function (index) {
+
+                    $.ajax({
+                        type: 'post',
+                        url: 'deleteSalaryByEid.do',
+                        data: {"arr": ids},
+                        traditional: true,
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data == 1) {
+                                layer.msg('已删除!', {icon: 1, time: 4000});
+                                // $(obj).parents("tr").remove();
+                                // obj.del();
+                            }
+                            else {
+                                //alert("exist");
+                                layer.msg('删除失败!', {icon: 5, time: 1000});
+                            }
+                        },
+                        error: function (data) {
+                            // alert("error" + data);
+                            layer.alert("抱歉！出现未知错误！", {icon: 5});
+                        }
+                    })
+                    layer.close(index);
+                    relo();
+                });
+            },
+            getCheckLengthIssue: function () { //获取选中数目
+                var checkStatus = table.checkStatus('idTest')
+                    , data = checkStatus.data;
+                //遍历选中的选项中的id，放到数组中
+                var ids = [];
+                $.each(data, function (index, item) {
+                    ids.push(item.sId);
+                });
+                layer.confirm('确定发放所选工资项吗', function (index) {
+
+                    $.ajax({
+                        type: 'post',
+                        url: 'issueSalaryByEid.do',
+                        data: {"arr": ids},
+                        traditional: true,
+                        dataType: 'json',
+                        success: function (data) {
+
+                        }
+                    });
+                    layer.close(index);
+                    relo();
+                });
+            }
+        };
+        $('.demoTable .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        function relo() {
+            var eAccount = $('#eAccount');
+            var dId = $('#dId');
+            var date = $('#date');
+            table.reload('idTest', {
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+                , where: {
+                    eAccount: eAccount.val(),
+                    dId: dId.val(),
+                    sTime: date.val()
+                }
+            });
+        }
+
+    });
+
+
+</script>
+
+</body>
+
+</html>

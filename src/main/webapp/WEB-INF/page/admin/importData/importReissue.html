@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ESMS</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/ssm_esms/static/css/font.css">
+    <link rel="stylesheet" href="/ssm_esms/static/css/xadmin.css">
+    <script type="text/javascript" src="/ssm_esms/static/js/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="/ssm_esms/static/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="/ssm_esms/static/js/xadmin.js"></script>
+</head>
+<body>
+<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a>首页</a>
+        <a>工资管理</a>
+        <a>
+          <cite>导入其他工资项</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+       href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+<form id="uploadForm">
+    <!--<p >指定文件名： <input type="text" name="filename" value= ""/></p >-->
+    <br>
+    <!--<p >点击选择补发工资文件： <input  type="file"  name="file" /></p><br/>-->
+
+    <div class="layui-upload">
+        点击选择其他工资项文件：
+        <button type="button" class="layui-btn layui-btn-normal" id="test8">选择文件</button>
+        <button type="button" class="layui-btn" id="test9">开始上传</button>
+    </div>
+    <!--<input class="layui-btn  layui-btn-sm" type="button" value="点击上传文件" onclick="doUpload()" style="margin-left: 30px"/>-->
+</form>
+<script type="text/javascript">
+    // function doUpload() {
+    //     var formData = new FormData($( "#uploadForm" )[0]);
+    //     $.ajax({
+    //         url: '/importReissue.do' ,
+    //         type: 'POST',
+    //         data: formData,
+    //         async: false,
+    //         cache: false,
+    //         contentType: false,
+    //         processData: false,
+    //         success: function (returndata) {
+    //             //alert(returndata.result);
+    //             layer.msg(returndata.result,{time:4000});
+    //         },
+    //         error: function (returndata) {
+    //             layer.msg(returndata.result,{icon:5,time:1000});
+    //         }
+    //     });
+    // }
+
+    layui.use('upload', function () {
+        var $ = layui.jquery
+            , upload = layui.upload;
+        //选完文件后不自动上传
+        upload.render({
+            elem: '#test8'
+            , url: '/ssm_esms/importReissue.do'
+            , auto: false
+            ,accept: 'file'
+            // ,multiple: true
+            , bindAction: '#test9'
+            , done: function (returndata) {
+                layer.msg(returndata.result, {time: 4000});
+            },
+            error: function (returndata) {
+                layer.msg(returndata.result, {icon: 5, time: 1000});
+            }
+        });
+    })
+</script>
+</body>
+</html>

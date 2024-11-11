@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>ESMS</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/ssm_esms/static/css/font.css">
+    <link rel="stylesheet" href="/ssm_esms/static/css/xadmin.css">
+    <script type="text/javascript" src="/ssm_esms/static/js/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="/ssm_esms/static/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="/ssm_esms/static/js/xadmin.js"></script>
+
+</head>
+
+<body class="layui-anim layui-anim-up">
+
+<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a>首页</a>
+        <a>项目调度管理</a>
+        <a>
+          <cite>项目调度详情</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+       href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+<div class="x-body" id="container">
+    <div class="demoTable">
+        年度查询：
+        <div class="layui-inline">
+            <input id="year" lay-verify="date" autocomplete="off" class="layui-input" type="text" readonly>
+        </div>
+        <button class="layui-btn" data-type="reload">查&nbsp;&nbsp;询</button>
+    </div>
+</div>
+</div>
+
+<div style="text-align: center">
+    <table class="layui-table"
+           lay-data="{height: 'full-160', cellMinWidth:80, url:'/ssm_esms/monthlyattendance/findEmployeeAttendance.do',initSort: {field: 'sTime', type: 'desc'}, page:true, id:'idTest'}"
+           lay-filter="demo">
+        <thead>
+        <tr>
+            <th lay-data="{field:'attendanceTime',sort: true , width:100, fixed: true,align: 'center'}"
+                rowspan="2">月份
+            </th>
+            <th lay-data="{minWidth:100,align: 'center'}" colspan="2">请假天数</th>
+            <th lay-data="{minWidth:100,align: 'center'}" colspan="3">加班小时</th>
+            <th lay-data="{minWidth:100,align: 'center'}" colspan="4">考勤情况</th>
+        </tr>
+        <tr>
+            <th lay-data="{field:'sickLeaveNum', minWidth:100,align: 'center'}">
+                病假
+            </th>
+            <th lay-data="{field:'compassionateLeaveNum', minWidth:100,align: 'center'}">
+                事假
+            </th>
+
+            <th lay-data="{field:'overtimeHour', minWidth:100,align: 'center'}">
+                平时加班
+            </th>
+            <th lay-data="{field:'weekendHour', minWidth:100,align: 'center'}">
+                周末加班
+            </th>
+            <th lay-data="{field:'holidayHour', minWidth:100,align: 'center'}">
+                节假日加班
+            </th>
+
+            <th lay-data="{field:'lateNum', minWidth:100,align: 'center'}">
+                迟到次数
+            </th>
+            <th lay-data="{field:'earlyNum', minWidth:100,align: 'center'}">
+                早退次数
+            </th>
+            <th lay-data="{field:'absenceNum', minWidth:100,align: 'center'}">
+                缺勤天数
+            </th>
+            <th lay-data="{field:'businessTravelNum', minWidth:100,align: 'center'}">
+                出差天数
+            </th>
+        </tr>
+        </thead>
+    </table>
+</div>
+</div>
+<script>
+    var year = new Date().getFullYear();
+    layui.use(['laydate', 'table'], function () {
+        var laydate = layui.laydate
+            , table = layui.table;
+
+        //年月范围
+        laydate.render({
+            elem: '#year'
+            , type: 'year'
+            , value: year
+            , isInitValue: true
+        });
+
+        var $ = layui.$, active = {
+            reload: function () {
+                //执行重载
+                table.reload('idTest', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    },
+                    where: {
+                        attendance_time: $("#year").val()
+                    }
+                    , page: true
+                });
+            }
+        };
+        $('.demoTable .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+
+</script>
+
+</body>
+
+</html>

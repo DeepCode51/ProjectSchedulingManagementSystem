@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ESMS</title>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/ssm_esms/static/css/font.css">
+    <link rel="stylesheet" href="/ssm_esms/static/css/xadmin.css">
+    <link rel="stylesheet" href="/ssm_esms/static/lib/layui/css/layui.css">
+
+</head>
+<body>
+<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a >首页</a>
+        <a >员工管理</a>
+        <a>
+          <cite>员工编辑</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+<div class="x-body layui-anim layui-anim-up">
+    <form class="layui-form" action="">
+        <!--eId,dId,pId,rbId隐藏域-->
+        <input type="hidden" value="" id="eId">
+        <input type="hidden" value="" id="ddId">
+        <input type="hidden" value="" id="ppId">
+        <input type="hidden" value="" id="rbbId">
+    <table class="">
+        <tbody>
+                <tr>
+                    <td>
+                        <label class="layui-form-label" style="">工号</label>
+                    </td>
+                    <td>
+                        <div class="layui-input-inline">
+                            <input type="text" id="eAccount" class="layui-input" value="" lay-verify="number" disabled/>
+                        </div>
+                    </td>
+                    <td>
+                        <label class="layui-form-label">姓名</label>
+                    </td>
+                    <td>
+                        <div class="layui-input-inline">
+                            <input type="text" id="eName" class="layui-input" value="" lay-verify="required|length|specialCharacter"/>
+                        </div>
+                    </td>
+
+                    <td>
+                        <label class="layui-form-label">身份证号码</label>
+                    </td>
+                    <td>
+                        <div class="layui-input-inline">
+                            <input type="text" id="eIdcard" class="layui-input" value="" lay-verify="identity"/>
+                        </div>
+                    </td>
+                    <td width="60px;">&nbsp;</td>
+                    <td rowspan="6">
+                        <!--存放图像路径的隐藏域-->
+                        <input type="hidden" id="headPath">
+                        <img src="/ssm_esms/img/head/xxx.jpg" id="headP" height="150" width="110"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>
+                        <label class="layui-form-label">性别</label>
+                    </td>
+                    <td>
+
+                        <div class="layui-form-item" pane="" style="">
+                            <div class="layui-input-block" style="width: 157px;margin: 10px 0 0 0;" id="eSex">
+                                <input name="sex" value="男"  title="男" type="radio">
+                                <input name="sex" value="女" title="女" type="radio">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <label class="layui-form-label">学历</label>
+                    </td>
+                    <td>
+                        <div class="layui-form-item" style="margin: 0 0 0 0">
+                            <input type="text" id="eDagree" class="layui-input" value="" lay-verify="required|length|specialCharacter"/>
+                        </div>
+
+                    </td>
+
+
+                    <td>
+                        <label class="layui-form-label">生日</label>
+                    </td>
+                    <td>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <input name="date" id="eBirthday" lay-verify="date" required autocomplete="off" readonly class="layui-input" type="text">
+                            </div>
+                        </div>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>
+                        <!--<a href="javascript:;" onclick="getDepartment();">-->
+                            <label class="layui-form-label">部门</label>
+                        <!--</a>-->
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block" style="width: 157px;margin: 13px 0 0 0;">
+                                <select name="dep" id="dId" lay-filter="dep">
+                                </select>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <!--<a href="javascript:;" onclick="getPosition();">-->
+                            <label class="layui-form-label">岗位</label>
+                        <!--</a>-->
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block" style="width: 157px;margin: 13px 0 0 0;">
+                                <select name="pId" id="pId" lay-filter="">
+                                </select>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <label class="layui-form-label">职称</label>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block" style="width: 157px;margin: 13px 0 0 0;">
+                                <select name="rbId" id="rbId" lay-filter="">
+                                </select>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+
+                    <td>
+                        <label class="layui-form-label">入职时间</label>
+                    </td>
+                    <td>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <input name="date" id="eEntryTime" lay-verify="date" required autocomplete="off" class="layui-input" type="text" readonly>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <label class="layui-form-label">基本工资</label>
+                    </td>
+                    <td>
+                        <div class="layui-input-inline">
+                            <input type="text" id="eBasePay" class="layui-input"  value="" lay-verify="number"/>
+                        </div>
+                    </td>
+                    <td>
+                        <label class="layui-form-label"></label>
+                    </td>
+                    <td>
+                        <label class="layui-form-label"></label>
+                    </td>
+                    <td >&nbsp;</td>
+                    <td rowspan="2">
+                        <div style="margin: 0 0 0 0px;">
+                            <button type="button" class="layui-btn" id="headPhoto" style="width: 110px">
+                                <i class="layui-icon">&#xe67c;</i>修改头像
+                            </button>
+                        </div>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+        </tbody>
+    </table>
+    <hr>
+    <hr>
+    <span style="font-size: 20px">&nbsp;&nbsp;联系方式：</span>
+        <div class="layui-form-item" style="">
+            <!--<input type="hidden" id="eId" value=""/>-->
+            <label class="layui-form-label">手机号码</label>
+            <div class="layui-input-inline">
+                <input type="tel" id="ePhone" name="phone" required lay-verify="required|phone"
+                       autocomplete="off"
+                       class="layui-input" value=""/>
+            </div>
+            <label class="layui-form-label" style="width: 180px">邮箱地址</label>
+            <div class="layui-input-inline">
+                <input type="email" id="eEmail" required lay-verify="required|email" autocomplete="off"
+                       class="layui-input"
+                       style="width: 200px" value=""/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">紧急联系人</label>
+            <div class="layui-input-inline">
+                <input type="text" id="eUrgentPerson" required lay-verify="required|length|specialCharacter" autocomplete="off"
+                       class="layui-input" value=""/>
+            </div>
+            <label class="layui-form-label" style="width: 180px">紧急联系人电话</label>
+            <div class="layui-input-inline">
+                <input type="tel" id="eUrgentPhone" lay-verify="required|phone" autocomplete="off"
+                       class="layui-input" style="width: 200px" value=""/>
+            </div>
+            <div class="layui-input-inline" style="margin-left:100px">
+                <button class="layui-btn layui-btn-radius" lay-submit lay-filter="addInfor"
+                        style="width: 110px">确定
+                </button>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">家庭住址</label>
+            <div class="layui-input-inline">
+                <input type="text" name="text" id="eHometown" required lay-verify="required" autocomplete="off"
+                       class="layui-input" style="width: 610px" value=""/>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+</body>
+<script type="text/javascript" src="/ssm_esms/static/js/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="/ssm_esms/static/lib/layui/layui.js"></script>
+<script type="text/javascript" src="/ssm_esms/static/js/xadmin.js"></script>
+<script>
+    // var dRemark = null;
+    // var pDuty = null;
+    // window.onload = function () {
+    //     $.ajax({
+    //         url: "inforEmployee.do",
+    //         type: "get",
+    //         dataType: "json",
+    //         success: function (data) {
+    //             var employee = data.employee;
+    //             var rankBonus = data.rankBonus;
+    //             var position = data.position;
+    //             var department = data.department;
+    //             $("#eBasePay").val(employee.eBasePay);
+    //             $("#eAccount").val(employee.eAccount);
+    //             $("#eEmail").val(employee.eEmail);
+    //             $("#eEntryTime").val(employee.eEntryTime)
+    //             $("#eBirthday").val(employee.eBirthday)
+    //             $("#eHometown").val(employee.eHometown)
+    //             $("#eDagree").val(employee.eDagree)
+    //             $("#eIdcard").val(employee.eIdcard)
+    //             $("#eName").val(employee.eName)
+    //             $("#ePhone").val(employee.ePhone)
+    //             $("#dName").val(department.dName)
+    //             $("#pName").val(position.pName)
+    //             $("#rankName").val(rankBonus.rankName)
+    //             $("#eSex").val(employee.eSex)
+    //             $("#eUrgentPerson").val(employee.eUrgentPerson)
+    //             $("#eUrgentPhone").val(employee.eUrgentPhone)
+    //             // $("#eId").val(employee.eId)
+    //             dRemark = department.dRemark;
+    //             pDuty = position.pDuty;
+    //         }
+    //     });
+    // }
+    window.onload = function () {
+
+        //加载部门id
+        $("#eId").val(decodeURI(getQueryVariable("eId")));
+        $("#ddId").val(decodeURI(getQueryVariable("dId")));
+        $("#ppId").val(decodeURI(getQueryVariable("pId")));
+        $("#rbbId").val(decodeURI(getQueryVariable("rbId")));
+
+        // alert($("#ddId").val())
+        // var ddId = decodeURI(getQueryVariable("ddId"));
+        // alert($("#eId").val());
+
+        //加载员工信息
+        $.ajax({
+            url:'employee/selectVoByPrimaryKey.do',
+            dataType:'json',
+            data: {"id": parseInt($("#eId").val())},
+            type:'post',
+            success:function(result){
+                // console.log(result);
+                $("#eAccount").val(result.employee.eAccount);
+                $("#eName").val(result.employee.eName);
+                $("#ePassword").val(result.employee.ePassword);
+                $("#eIdcard").val(result.employee.eIdcard);
+                // $("#eSex").val(result.employee.eSex);
+                $("input[name=sex][value='男']").attr("checked", result.employee.eSex == '男' ? true : false);
+                $("input[name=sex][value='女']").attr("checked", result.employee.eSex == '女' ? true : false);
+
+                $("#eBirthday").val(result.employee.eBirthday);
+                $("#eDagree").val(result.employee.eDagree);
+                $("#eEntryTime").val(result.employee.eEntryTime);
+                $("#eBasePay").val(result.employee.eBasePay);
+                $("#ePhone").val(result.employee.ePhone);
+                $("#eEmail").val(result.employee.eEmail);
+                $("#eUrgentPerson").val(result.employee.eUrgentPerson);
+                $("#eUrgentPhone").val(result.employee.eUrgentPhone);
+                $("#eHometown").val(result.employee.eHometown);
+                //设置图片的src,并设置图片隐藏域的值
+                $("#headP").attr('src',result.employee.eHeadPath);
+                $("#headPath").val(result.employee.eHeadPath);
+                // console.log(result.employee.eHeadPath+"asd");
+                layui.form.render('radio'); //渲染表单
+            }
+        });
+
+        //加载部门下拉搜索框
+        var dId = $("#dId");
+        $.ajax({
+            url:'department/findSelective.do?page=1&limit=999', //分页限制为999条，就是全部
+            dataType:'json',
+            type:'post',
+            success:function(result){
+                // console.log(result);
+                $.each(result.data,function(index,item){
+                    // console.log(index + "&" + item.dId);
+                    //判断选中状态
+                    // alert(item.dId == parseInt($("#ddId").val()))
+                    if(item.dId == $("#ddId").val()) {
+                        dId.append("<option checked='checked' value="+item.dId+">"+item.dName+"</option>");
+                    } else {
+                        dId.append("<option value="+item.dId+">"+item.dName+"</option>");
+                    }
+
+                })
+                dId.val($("#ddId").val());   //设置选中的值，”“中的值是option中的value值
+                layui.form.render('select');  //渲染select
+            }
+        });
+
+        //加载岗位下拉搜索框
+        var pId = $("#pId");
+        $.ajax({
+            url:'position/findSelective.do?page=1&limit=999', //分页限制为999条，就是全部
+            dataType:'json',
+            type:'post',
+            success:function(result){
+                // console.log(result);
+                $.each(result.data,function(index,item){
+                    // console.log(index + "&" + item.dId);
+                    //判断选中状态
+                    if(item.pId == $("#ppId").val()) {
+                        pId.append("<option checked='checked' value="+item.pId+">"+item.pName+"</option>");
+                    } else {
+                        pId.append("<option value="+item.pId+">"+item.pName+"</option>");
+                    }
+                })
+                pId.val($("#ppId").val());   //设置选中的值，”“中的值是option中的value值
+                layui.form.render('select');  //渲染select
+            }
+        });
+
+        //加载职称下拉搜索框
+        var rbId = $("#rbId");
+        $.ajax({
+            url:'findRankBonusList.do?page=1&limit=999', //分页限制为999条，就是全部
+            dataType:'json',
+            type:'post',
+            success:function(result){
+                // console.log(result);
+                $.each(result.data,function(index,item){
+                    // console.log(index + "&" + item.rbId+"&"+item.rankName);
+                    if(item.rbId == $("#rbbId").val()) {
+                        rbId.append("<option checked='checked' value="+item.rbId+">"+item.rankName+"</option>");
+                    } else {
+                        rbId.append("<option value="+item.rbId+">"+item.rankName+"</option>");
+                    }
+
+                })
+                rbId.val($("#rbbId").val());   //设置选中的值，”“中的值是option中的value值
+                layui.form.render('select');  //渲染select
+            }
+        });
+
+    }
+
+    //获取url参数
+    function getQueryVariable(variable)
+    {
+        var query = window.location.search.substring(1);
+        var index = query.indexOf("?");
+        query = query.substr(index+1,query.length);
+        // console.log(query);
+        var vars = query.split("&");
+        // console.log(vars);
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            // console.log(pair[0]);
+            if(pair[0] == variable){
+                return pair[1];
+            }
+        }
+        return false;
+    }
+
+    // 预先加载
+    layui.use(['form', 'layedit', 'laydate'], function(){
+        var form = layui.form
+            ,layer = layui.layer
+            ,layedit = layui.layedit
+            ,laydate = layui.laydate;
+
+        // form.render();
+
+        //日期
+        laydate.render({
+            elem: '#eEntryTime'
+        });
+        laydate.render({
+            elem: '#eBirthday'
+        });
+
+        // 上传图片
+        layui.use('upload', function () {
+            var upload = layui.upload;
+            //执行实例
+            var uploadInst = upload.render({
+                elem: '#headPhoto' //绑定元素
+                , url: 'uploadPhoto.do' //上传接口
+                , done: function (res) {
+                    //上传完毕回调
+                    $('#headP').attr('src', res.data.src);
+                    $("#headPath").val(res.data.src);
+                }
+                , error: function () {
+                    //请求异常回调
+                }
+            });
+        });
+
+        form.verify({
+            length: function(value){
+                value = value.replace(" ","");
+                if(value.length > 200){
+                    return '输入长度过长';
+                }
+            },
+            passwordLength: function(value) {
+                value = value.replace(" ","");
+                if(value.length > 12 || value.length < 4){
+                    return '密码长度应在4到12位之间';
+                }
+            },
+            specialCharacter: function(value) {
+                // 验证特殊字符
+                var pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]");
+                if(pattern.test(value)){
+                    return '不能包含特殊字符';
+                }
+            }
+        });
+
+        //监听提交form里面的submit标签
+        form.on('submit(addInfor)', function (data) {
+            // console.log($('#headPath').val());
+            $.ajax({
+                url: "employee/updateByPrimaryKeySelective.do",
+                data: {
+                    "eId":parseInt($("#eId").val()),
+                    "eName":$("#eName").val(),
+                    "eIdcard":$("#eIdcard").val(),
+                    "rbId":parseInt($("#rbId").val()),
+                    "eSex": $("input[name='sex']:checked").val(),
+                    "eBirthday":$("#eBirthday").val(),
+                    "eDagree":$("#eDagree").val(),
+                    "dId":parseInt($("#dId").val()),
+                    "pId":parseInt($("#pId").val()),
+                    "eEntryTime":$("#eEntryTime").val(),
+                    "eBasePay":parseFloat($("#eBasePay").val()),
+                    "ePhone":$("#ePhone").val(),
+                    "eEmail":$("#eEmail").val(),
+                    "eUrgentPerson": $("#eUrgentPerson").val(),
+                    "eUrgentPhone": $("#eUrgentPhone").val(),
+                    "eHometown": $("#eHometown").val(),
+                    "headPath": $('#headPath').val()
+                },
+                type: "post",
+                dataType: "json",
+                success: function (data) {
+                    if (data == 1) {
+                        layer.alert("修改成功", {title: "修改信息"}
+
+                        )
+
+                    } else {
+                        // layer.alert("添加失败", {title: "操作提示"})
+                        // layer.msg("工号已存在",{icon: 5,anim: 6});
+                    }
+                },
+            })
+            return false;
+        });
+    });
+
+
+
+</script>
+</html>
